@@ -17,8 +17,8 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     var token: String?
     let email = "abc@example.com"
     let password = "password"
-    let _context = (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext
-    var fetchedResultController: NSFetchedResultsController = NSFetchedResultsController()
+    let note_db = NoteDatabase()
+    var fetchedResultController = NSFetchedResultsController()
 
     @IBAction func refreshTapped(sender: AnyObject) {
         self.simplenote_get_index(updateNoteDatabase)
@@ -33,7 +33,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
-        fetchedResultController = getFetchedResultController()
+        fetchedResultController = NSFetchedResultsController(fetchRequest: note_db.fetchRequest(), managedObjectContext: note_db.context, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultController.delegate = self
         fetchedResultController.performFetch(nil)
     }
@@ -84,8 +84,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                 (_, _, json, _) in
                 let body = json["content"].stringValue
                 println("Body: \(body)")
-                let note_db = NoteDatabase()
-                note_db.update_body(key, body: body)
+                self.note_db.update_body(key, body: body)
                 completion?()
             }
         }
@@ -105,7 +104,6 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             let date = NSDate(timeIntervalSince1970: modifydate)
             println("date: \(date), key: \(key)")
 
-            let note_db = NoteDatabase()
             note_db.update(key, createdate: createdate, modifydate: modifydate,
                            version: version)
             simplenote_get_note(key, nil)
@@ -122,18 +120,6 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
         return fetchedResultController.sections![section].numberOfObjects
-    }
-
-    func getFetchedResultController() -> NSFetchedResultsController {
-        fetchedResultController = NSFetchedResultsController(fetchRequest: fetchRequest(), managedObjectContext: _context!, sectionNameKeyPath: nil, cacheName: nil)
-        return fetchedResultController
-    }
-
-    func fetchRequest() -> NSFetchRequest {
-        let req = NSFetchRequest(entityName: "Note")
-        let sort = NSSortDescriptor(key: "modifydate", ascending: true)
-        req.sortDescriptors = [sort]
-        return req
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

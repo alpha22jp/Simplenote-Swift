@@ -24,6 +24,13 @@ class NoteDatabase {
         context = app.managedObjectContext!
     }
 
+    func fetchRequest() -> NSFetchRequest {
+        let req = NSFetchRequest(entityName: "Note")
+        let sort = NSSortDescriptor(key: "modifydate", ascending: true)
+        req.sortDescriptors = [sort]
+        return req
+    }
+
     func update(key: String, createdate: NSTimeInterval, modifydate: NSTimeInterval,
                 version: Int32) {
         var note: Note

@@ -17,6 +17,7 @@
 		C7663ED61A5524F20030FAAF /* SimplenoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7663ED51A5524F20030FAAF /* SimplenoteTests.swift */; };
 		FF8F2B2E1A5D6713007507B3 /* AlamofireSwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8F2B291A5D6636007507B3 /* AlamofireSwiftyJSON.framework */; };
 		FF8F2B301A5D68AF007507B3 /* NoteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */; };
+		FFC9D33B1A5D842E002CD2FC /* Simplenote.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC9D33A1A5D842E002CD2FC /* Simplenote.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		C7663ED51A5524F20030FAAF /* SimplenoteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplenoteTests.swift; sourceTree = "<group>"; };
 		FF8F2B211A5D6635007507B3 /* Alamofire-SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Alamofire-SwiftyJSON.xcodeproj"; path = "Alamofire-SwiftyJSON/Alamofire-SwiftyJSON.xcodeproj"; sourceTree = "<group>"; };
 		FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteDatabase.swift; sourceTree = "<group>"; };
+		FFC9D33A1A5D842E002CD2FC /* Simplenote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Simplenote.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 		C7663EB91A5524F10030FAAF /* Simplenote */ = {
 			isa = PBXGroup;
 			children = (
+				FFC9D33A1A5D842E002CD2FC /* Simplenote.swift */,
 				FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */,
 				C7663EBC1A5524F10030FAAF /* AppDelegate.swift */,
 				C73983A61A552A2F00C1E215 /* MainViewController.swift */,
@@ -193,7 +196,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0610;
-				ORGANIZATIONNAME = "alpha22jp";
+				ORGANIZATIONNAME = alpha22jp;
 				TargetAttributes = {
 					C7663EB61A5524F10030FAAF = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -276,6 +279,7 @@
 				C7663EC01A5524F10030FAAF /* Simplenote.xcdatamodeld in Sources */,
 				C73983A91A5574DB00C1E215 /* NoteViewController.swift in Sources */,
 				C73983A71A552A2F00C1E215 /* MainViewController.swift in Sources */,
+				FFC9D33B1A5D842E002CD2FC /* Simplenote.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

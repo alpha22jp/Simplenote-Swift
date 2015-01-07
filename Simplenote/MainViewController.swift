@@ -8,20 +8,16 @@
 
 import UIKit
 import CoreData
-import Alamofire
 import SwiftyJSON
-import AlamofireSwiftyJSON
 
 class MainViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
-    var token: String?
-    let email = "abc@example.com"
-    let password = "password"
+    let simplenote = Simplenote()
     let note_db = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
     var fetchedResultController = NSFetchedResultsController()
 
     @IBAction func refreshTapped(sender: AnyObject) {
-        self.simplenote_get_index(updateNoteDatabase)
+        simplenote.simplenote_get_index(updateNoteDatabase)
     }
 
     override func viewDidLoad() {
@@ -43,53 +39,6 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Simplenote access
-
-    func simplenote_get_token(completion: (()->Void)!) {
-        if self.token != nil {
-            completion?()
-            return
-        }
-        let str = "email=\(email)&password=\(password)"
-        let encodedStr = str.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
-        let data = encodedStr?.dataUsingEncoding(NSUTF8StringEncoding)
-        let base64data = data?.base64EncodedStringWithOptions(nil)
-        let url = "http://simple-note.appspot.com/api/login"
-        let params = [ base64data!: "" ]
-        Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
-            (_, _, res, _) in
-            self.token = res
-            println("Token: \(self.token)")
-            completion?()
-        }
-    }
-
-    func simplenote_get_index(completion: ((SwiftyJSON.JSON)->Void)!) {
-        simplenote_get_token { () in
-            let url = "http://simple-note.appspot.com/api2/index"
-            let params = [ "auth": self.token!, "email": self.email ]
-            Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
-                (_, _, json, _) in
-                println("Index: \(json)")
-                completion?(json)
-            }
-        }
-    }
-
-    func simplenote_get_note(key: String, completion: (()->Void)!) {
-        simplenote_get_token { () in
-            let url = "https://simple-note.appspot.com/api2/data/" + key
-            let params = [ "auth": self.token!, "email": self.email ]
-            Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
-                (_, _, json, _) in
-                let body = json["content"].stringValue
-                println("Body: \(body)")
-                self.note_db.update_body(key, body: body)
-                completion?()
-            }
-        }
-    }
-
     func updateNoteDatabase(json: SwiftyJSON.JSON) {
         let count: Int = json["count"].intValue
         println("Note count: \(count)")
@@ -106,7 +55,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
             note_db.update(key, createdate: createdate, modifydate: modifydate,
                            version: version)
-            simplenote_get_note(key, nil)
+            simplenote.simplenote_get_note(key, {self.note_db.update_body(key, body: $0)})
         }
     }
 

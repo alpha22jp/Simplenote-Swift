@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 alpha22jp@gmail.com. All rights reserved.
 //
 
-import UIKit
 import CoreData
 
 class Note: NSManagedObject {
@@ -19,9 +18,8 @@ class Note: NSManagedObject {
 
 class NoteDatabase {
     var context: NSManagedObjectContext
-    init() {
-        let app: AppDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-        context = app.managedObjectContext!
+    init(context: NSManagedObjectContext) {
+        self.context = context
     }
 
     func fetchRequest() -> NSFetchRequest {

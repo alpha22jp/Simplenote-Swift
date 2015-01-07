@@ -17,7 +17,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     var token: String?
     let email = "abc@example.com"
     let password = "password"
-    let note_db = NoteDatabase()
+    let note_db = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
     var fetchedResultController = NSFetchedResultsController()
 
     @IBAction func refreshTapped(sender: AnyObject) {

@@ -43,9 +43,12 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             let date = NSDate(timeIntervalSince1970: note.modifydate)
             println("date: \(date), key: \(note.key)")
 
-            note_db.update(note.key, createdate: note.createdate,
-                           modifydate: note.modifydate, version: note.version)
-            simplenote.simplenote_get_note(note.key, {self.note_db.update_content(note.key, content: $0)})
+            var entity: Note? = note_db.search_entity(note.key)
+            if entity == nil {
+                entity = note_db.create_entity(note.key)
+            }
+            note_db.update_attributes(entity!, note: note)
+            simplenote.simplenote_get_note(note.key, {self.note_db.update_content(entity!, content: $0)})
         }
     }
 

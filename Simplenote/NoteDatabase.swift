@@ -29,39 +29,13 @@ class NoteDatabase {
         return req
     }
 
-    func update(key: String, createdate: NSTimeInterval, modifydate: NSTimeInterval,
-                version: Int32) {
-        var note: Note
-
-        // EntityDescriptionのインスタンスを生成
-        let req = NSFetchRequest(entityName: "Note")
-        req.returnsObjectsAsFaults = false
-        req.predicate = NSPredicate(format: "%K = %@", "key", key)
-
-        // フェッチリクエストの実行
-        println("Search \(key) in DB...")
-        let results = context.executeFetchRequest(req, error: nil)
-        if let notes = results as? [Note] {
-            if notes.count > 0 {
-                println("Found")
-                note = notes[0]
-            }else{
-                println("Not found, create new entity")
-                note = NSEntityDescription.insertNewObjectForEntityForName("Note", inManagedObjectContext: context) as Note
-                note.key = key
-            }
-            note.createdate = createdate
-            note.modifydate = modifydate
-            note.version = version
-            context.save(nil)
-        }else{
-            println("executeFetchRequest() failed")
-        }
+    func create_entity(key: String) -> Note {
+        var note = NSEntityDescription.insertNewObjectForEntityForName("Note", inManagedObjectContext: context) as Note
+        note.key = key
+        return note
     }
 
-    func update_content(key: String, content: String) {
-        var note: Note
-
+    func search_entity(key: String) -> Note? {
         // EntityDescriptionのインスタンスを生成
         let req = NSFetchRequest(entityName: "Note")
         req.returnsObjectsAsFaults = false
@@ -72,9 +46,22 @@ class NoteDatabase {
         let results = context.executeFetchRequest(req, error: nil)
         if let notes = results as? [Note] {
             if notes.count > 0 {
-                notes[0].content = content
-                context.save(nil)
+                return notes[0]
             }
         }
+        println("Can't find note in DB")
+        return nil
+    }
+
+    func update_attributes(entity: Note, note: Simplenote.Note){
+        entity.createdate = note.createdate
+        entity.modifydate = note.modifydate
+        entity.version = note.version
+        context.save(nil)
+    }
+
+    func update_content(entity: Note, content: String) {
+        entity.content = content
+        context.save(nil)
     }
 }

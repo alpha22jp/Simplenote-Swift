@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-import SwiftyJSON
 
 class MainViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
@@ -39,23 +38,14 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // Dispose of any resources that can be recreated.
     }
 
-    func updateNoteDatabase(json: SwiftyJSON.JSON) {
-        let count: Int = json["count"].intValue
-        println("Note count: \(count)")
+    func updateNoteDatabase(note_array: [Simplenote.Note]) {
+        for note in note_array {
+            let date = NSDate(timeIntervalSince1970: note.modifydate)
+            println("date: \(date), key: \(note.key)")
 
-        let data = json["data"]
-        for i in 0 ..< count {
-            let key = data[i]["key"].stringValue
-            let createdate: NSTimeInterval = data[i]["createdate"].doubleValue
-            let modifydate: NSTimeInterval = data[i]["modifydate"].doubleValue
-            let version = data[i]["version"].int32Value
-
-            let date = NSDate(timeIntervalSince1970: modifydate)
-            println("date: \(date), key: \(key)")
-
-            note_db.update(key, createdate: createdate, modifydate: modifydate,
-                           version: version)
-            simplenote.simplenote_get_note(key, {self.note_db.update_body(key, body: $0)})
+            note_db.update(note.key, createdate: note.createdate,
+                           modifydate: note.modifydate, version: note.version)
+            simplenote.simplenote_get_note(note.key, {self.note_db.update_body(note.key, body: $0)})
         }
     }
 

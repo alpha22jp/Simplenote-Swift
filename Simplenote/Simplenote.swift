@@ -15,6 +15,13 @@ class Simplenote {
     let email = "abc@example.com"
     let password = "password"
 
+    struct Note {
+        var key: String
+        var createdate: NSTimeInterval
+        var modifydate: NSTimeInterval
+        var version: Int32
+    }
+
     init(){}
     func simplenote_get_token(completion: (()->Void)!) {
         if self.token != nil {
@@ -35,14 +42,25 @@ class Simplenote {
         }
     }
 
-    func simplenote_get_index(completion: ((SwiftyJSON.JSON)->Void)!) {
+    func simplenote_get_index(completion: (([Note])->Void)!) {
         simplenote_get_token { () in
             let url = "http://simple-note.appspot.com/api2/index"
             let params = [ "auth": self.token!, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
                 (_, _, json, _) in
                 println("Index: \(json)")
-                completion?(json)
+                let count: Int = json["count"].intValue
+                println("Note count: \(count)")
+                let data = json["data"]
+                var note_array: [Note] = []
+                for i in 0 ..< count {
+                    let note = Note(key: data[i]["key"].stringValue,
+                                    createdate: data[i]["createdate"].doubleValue,
+                                    modifydate: data[i]["modifydate"].doubleValue,
+                                    version: data[i]["version"].int32Value)
+                    note_array.append(note)
+                }
+                completion?(note_array)
             }
         }
     }

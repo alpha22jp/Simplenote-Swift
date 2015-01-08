@@ -45,7 +45,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
             note_db.update(note.key, createdate: note.createdate,
                            modifydate: note.modifydate, version: note.version)
-            simplenote.simplenote_get_note(note.key, {self.note_db.update_body(note.key, body: $0)})
+            simplenote.simplenote_get_note(note.key, {self.note_db.update_content(note.key, content: $0)})
         }
     }
 
@@ -125,7 +125,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             let cell = sender as UITableViewCell
             let indexPath = tableView.indexPathForCell(cell)
             let note = fetchedResultController.objectAtIndexPath(indexPath!) as Note
-            println("note.body: \(note.body)")
+            println("Content: \(note.content)")
             let controller = segue.destinationViewController as NoteViewController
             controller.note = note
         }

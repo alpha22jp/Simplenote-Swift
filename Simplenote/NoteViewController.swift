@@ -21,7 +21,7 @@ class NoteViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        textview.text = note!.body
+        textview.text = note!.content
     }
 
     override func didReceiveMemoryWarning() {

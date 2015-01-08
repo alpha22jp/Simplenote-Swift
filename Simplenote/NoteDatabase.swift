@@ -10,7 +10,7 @@ import CoreData
 
 class Note: NSManagedObject {
     @NSManaged var key: String
-    @NSManaged var body: String
+    @NSManaged var content: String
     @NSManaged var createdate: NSTimeInterval
     @NSManaged var modifydate: NSTimeInterval
     @NSManaged var version: Int32
@@ -59,7 +59,7 @@ class NoteDatabase {
         }
     }
 
-    func update_body(key: String, body: String) {
+    func update_content(key: String, content: String) {
         var note: Note
 
         // EntityDescriptionのインスタンスを生成
@@ -72,7 +72,7 @@ class NoteDatabase {
         let results = context.executeFetchRequest(req, error: nil)
         if let notes = results as? [Note] {
             if notes.count > 0 {
-                notes[0].body = body
+                notes[0].content = content
                 context.save(nil)
             }
         }

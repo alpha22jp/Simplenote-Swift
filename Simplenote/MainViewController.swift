@@ -15,10 +15,6 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     let database = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
     var fetchedResultController = NSFetchedResultsController()
 
-    @IBAction func refreshTapped(sender: AnyObject) {
-        simplenote.getIndex(analyzeNoteIndex)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -29,9 +29,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Notes" id="OO0-lL-mhN">
-                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="l99-C0-YZK">
+                        <barButtonItem key="leftBarButtonItem" title="Setting" id="l99-C0-YZK">
                             <connections>
-                                <action selector="refreshTapped:" destination="84D-EX-Mkl" id="2LT-8U-nRG"/>
+                                <segue destination="Mmm-jf-reT" kind="presentation" identifier="setting" id="8UR-Co-IWS"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="ayY-d2-ZBh">
@@ -44,6 +44,61 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pxx-Ar-mxs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="324.5" y="-289.5"/>
+        </scene>
+        <!--Setting-->
+        <scene sceneID="9Hy-jT-kps">
+            <objects>
+                <viewController title="Setting" id="Mmm-jf-reT" customClass="SettingViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4sc-D9-bws"/>
+                        <viewControllerLayoutGuide type="bottom" id="5qY-Ea-ybR"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="SvV-iJ-zcz">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="E-mail: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Sn-ZO-eHy">
+                                <rect key="frame" x="16" y="140" width="85" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Password: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MrK-1J-axO">
+                                <rect key="frame" x="16" y="174" width="85" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="abc@example.com" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KhN-Bc-USY">
+                                <rect key="frame" x="104" y="136" width="200" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="K32-59-JvE">
+                                <rect key="frame" x="104" y="170" width="200" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="alphabet" secureTextEntry="YES"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tLw-uP-awE">
+                                <rect key="frame" x="137" y="448" width="46" height="30"/>
+                                <state key="normal" title="OK">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="okButtonTapped:" destination="Mmm-jf-reT" eventType="touchUpInside" id="nUD-Yq-52A"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="email" destination="KhN-Bc-USY" id="Ga0-YD-R8h"/>
+                        <outlet property="password" destination="K32-59-JvE" id="8ej-AC-5nK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Oit-CG-hO7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="324" y="385"/>
         </scene>
         <!--Note-->
         <scene sceneID="NYj-pi-w1Z">
@@ -95,6 +150,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="WwH-Zb-16O"/>
+        <segue reference="Idh-AL-fwc"/>
     </inferredMetricsTieBreakers>
 </document>

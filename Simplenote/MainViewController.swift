@@ -31,11 +31,20 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         fetchedResultController = NSFetchedResultsController(fetchRequest: database.fetchRequest(), managedObjectContext: database.context, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultController.delegate = self
         fetchedResultController.performFetch(nil)
+
+        var refresh = UIRefreshControl()
+        refresh.attributedTitle = NSAttributedString(string: "Loading...")
+        refresh.addTarget(self, action: "pullToRefresh", forControlEvents:.ValueChanged)
+        self.refreshControl = refresh
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    func pullToRefresh() {
+        simplenote.getIndex(analyzeNoteIndex)
     }
 
     func analyzeNoteIndex(noteArray: [Simplenote.Note]) {
@@ -51,6 +60,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                 simplenote.getNote(note.key, {self.database.updateEntity(entity!, note: $0, content: $1)})
             }
         }
+        refreshControl?.endRefreshing()
     }
 
     // MARK: - Table view data source

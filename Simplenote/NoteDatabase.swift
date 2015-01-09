@@ -53,14 +53,10 @@ class NoteDatabase {
         return nil
     }
 
-    func update_attributes(entity: Note, note: Simplenote.Note){
+    func update(entity: Note, note: Simplenote.Note, content: String) {
         entity.createdate = note.createdate
         entity.modifydate = note.modifydate
         entity.version = note.version
-        context.save(nil)
-    }
-
-    func update_content(entity: Note, content: String) {
         entity.content = content
         context.save(nil)
     }

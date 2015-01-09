@@ -40,15 +40,14 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
     func updateNoteDatabase(note_array: [Simplenote.Note]) {
         for note in note_array {
-            let date = NSDate(timeIntervalSince1970: note.modifydate)
-            println("date: \(date), key: \(note.key)")
-
             var entity: Note? = note_db.search_entity(note.key)
             if entity == nil {
                 entity = note_db.create_entity(note.key)
             }
-            note_db.update_attributes(entity!, note: note)
-            simplenote.simplenote_get_note(note.key, {self.note_db.update_content(entity!, content: $0)})
+            println("Version check, local:\(entity!.version), remote:\(note.version)")
+            if note.version > entity!.version {
+                simplenote.simplenote_get_note(note.key, {self.note_db.update(entity!, note: note, content: $0)})
+            }
         }
     }
 

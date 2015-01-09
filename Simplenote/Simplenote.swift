@@ -65,15 +65,19 @@ class Simplenote {
         }
     }
 
-    func simplenote_get_note(key: String, completion: ((content: String)->Void)!) {
+    func simplenote_get_note(key: String, completion: ((note: Note, content: String)->Void)!) {
         simplenote_get_token { (token) in
             let url = "https://simple-note.appspot.com/api2/data/" + key
             let params = [ "auth": token!, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
                 (_, _, json, _) in
+                println("Note: \(json)")
+                let note = Note(key: json["key"].stringValue,
+                                createdate: json["createdate"].doubleValue,
+                                modifydate: json["modifydate"].doubleValue,
+                                version: json["version"].int32Value)
                 let content = json["content"].stringValue
-                println("Content: \(content)")
-                completion?(content: content)
+                completion?(note: note, content: content)
             }
         }
     }

@@ -46,7 +46,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             }
             println("Version check, local:\(entity!.version), remote:\(note.version)")
             if note.version > entity!.version {
-                simplenote.simplenote_get_note(note.key, {self.note_db.update(entity!, note: note, content: $0)})
+                simplenote.simplenote_get_note(note.key, {self.note_db.update(entity!, note: $0, content: $1)})
             }
         }
     }

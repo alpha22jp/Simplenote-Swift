@@ -23,7 +23,7 @@ class Simplenote {
     }
 
     init(){}
-    func simplenote_get_token(completion: ((token: String?)->Void)!) {
+    private func getToken(completion: ((token: String?)->Void)!) {
         if self.token != nil {
             completion?(token: self.token)
             return
@@ -42,8 +42,8 @@ class Simplenote {
         }
     }
 
-    func simplenote_get_index(completion: (([Note])->Void)!) {
-        simplenote_get_token { (token) in
+    func getIndex(completion: (([Note])->Void)!) {
+        getToken { (token) in
             let url = "http://simple-note.appspot.com/api2/index"
             let params = [ "auth": token!, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
@@ -65,8 +65,8 @@ class Simplenote {
         }
     }
 
-    func simplenote_get_note(key: String, completion: ((note: Note, content: String)->Void)!) {
-        simplenote_get_token { (token) in
+    func getNote(key: String, completion: ((note: Note, content: String)->Void)!) {
+        getToken { (token) in
             let url = "https://simple-note.appspot.com/api2/data/" + key
             let params = [ "auth": token!, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {

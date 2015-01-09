@@ -12,11 +12,11 @@ import CoreData
 class MainViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     let simplenote = Simplenote()
-    let note_db = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
+    let database = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
     var fetchedResultController = NSFetchedResultsController()
 
     @IBAction func refreshTapped(sender: AnyObject) {
-        simplenote.simplenote_get_index(updateNoteDatabase)
+        simplenote.getIndex(analyzeNoteIndex)
     }
 
     override func viewDidLoad() {
@@ -28,7 +28,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
-        fetchedResultController = NSFetchedResultsController(fetchRequest: note_db.fetchRequest(), managedObjectContext: note_db.context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultController = NSFetchedResultsController(fetchRequest: database.fetchRequest(), managedObjectContext: database.context, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultController.delegate = self
         fetchedResultController.performFetch(nil)
     }
@@ -38,15 +38,17 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // Dispose of any resources that can be recreated.
     }
 
-    func updateNoteDatabase(note_array: [Simplenote.Note]) {
-        for note in note_array {
-            var entity: Note? = note_db.search_entity(note.key)
+    func analyzeNoteIndex(noteArray: [Simplenote.Note]) {
+        for note in noteArray {
+            println("Search \(note.key)...")
+            var entity: Note? = database.searchEntity(note.key)
             if entity == nil {
-                entity = note_db.create_entity(note.key)
+                println("Not found, creating new entity...")
+                entity = database.createEntity(note.key)
             }
             println("Version check, local:\(entity!.version), remote:\(note.version)")
             if note.version > entity!.version {
-                simplenote.simplenote_get_note(note.key, {self.note_db.update(entity!, note: $0, content: $1)})
+                simplenote.getNote(note.key, {self.database.updateEntity(entity!, note: $0, content: $1)})
             }
         }
     }

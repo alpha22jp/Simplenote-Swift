@@ -51,13 +51,15 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         for note in noteArray {
             println("Search \(note.key)...")
             var entity: Note? = database.searchEntity(note.key)
-            if entity == nil {
-                println("Not found, creating new entity...")
-                entity = database.createEntity(note.key)
-            }
-            println("Version check, local:\(entity!.version), remote:\(note.version)")
-            if note.version > entity!.version {
-                simplenote.getNote(note.key, {self.database.updateEntity(entity!, note: $0, content: $1)})
+            println("Version check, local:\(entity?.version), remote:\(note.version)")
+            if note.version > entity?.version {
+                simplenote.getNote(note.key) { (note, content) in
+                    if entity == nil {
+                        println("Creating new entity...")
+                        entity = self.database.createEntity(note.key)
+                    }
+                    self.database.updateEntity(entity!, note: note, content: content)
+                }
             }
         }
         refreshControl?.endRefreshing()

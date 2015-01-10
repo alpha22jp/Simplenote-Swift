@@ -25,7 +25,8 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
         let sort = NSSortDescriptor(key: "modifydate", ascending: false)
-        fetchedResultController = database.getFetchedResultController(sort, predicate: nil)
+        let predicate = NSPredicate(format: "%K = FALSE", "isdeleted")
+        fetchedResultController = database.getFetchedResultController(sort, predicate: predicate)
         fetchedResultController.delegate = self
         fetchedResultController.performFetch(nil)
 

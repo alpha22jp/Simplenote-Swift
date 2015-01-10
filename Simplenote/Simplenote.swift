@@ -20,6 +20,7 @@ class Simplenote {
         var createdate: NSTimeInterval
         var modifydate: NSTimeInterval
         var version: Int32
+        var deleted: Int32
     }
 
     init(){}
@@ -64,7 +65,8 @@ class Simplenote {
                     let note = Note(key: data[i]["key"].stringValue,
                                     createdate: data[i]["createdate"].doubleValue,
                                     modifydate: data[i]["modifydate"].doubleValue,
-                                    version: data[i]["version"].int32Value)
+                                    version: data[i]["version"].int32Value,
+                                    deleted: data[i]["deleted"].int32Value)
                     note_array.append(note)
                 }
                 completion?(note_array)
@@ -82,7 +84,8 @@ class Simplenote {
                 let note = Note(key: json["key"].stringValue,
                                 createdate: json["createdate"].doubleValue,
                                 modifydate: json["modifydate"].doubleValue,
-                                version: json["version"].int32Value)
+                                version: json["version"].int32Value,
+                                deleted: json["deleted"].int32Value)
                 let content = json["content"].stringValue
                 completion?(note: note, content: content)
             }

@@ -14,6 +14,7 @@ class Note: NSManagedObject {
     @NSManaged var createdate: NSTimeInterval
     @NSManaged var modifydate: NSTimeInterval
     @NSManaged var version: Int32
+    @NSManaged var isdeleted: Bool
 }
 
 class NoteDatabase {
@@ -59,6 +60,7 @@ class NoteDatabase {
         entity.createdate = note.createdate
         entity.modifydate = note.modifydate
         entity.version = note.version
+        entity.isdeleted = (note.deleted == 1)
         entity.content = content
         context.save(nil)
     }

@@ -25,7 +25,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
         func fetchRequest() -> NSFetchRequest {
-            let sort = NSSortDescriptor(key: "modifydate", ascending: true)
+            let sort = NSSortDescriptor(key: "modifydate", ascending: false)
             let req = database.getFetchRequest()
             req.sortDescriptors = [sort]
             return req

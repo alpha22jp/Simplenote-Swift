@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class MainViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class MainViewController: UITableViewController, UISearchBarDelegate, NSFetchedResultsControllerDelegate {
 
     let simplenote = Simplenote()
     let database = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
@@ -39,6 +39,24 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        println("Search text = \(searchText)")
+    }
+
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        println("Search canceled")
+    }
+
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        println("keyword = \(searchBar.text)")
+        let sort = NSSortDescriptor(key: "modifydate", ascending: true)
+        let predicate = NSPredicate(format: "%K CONTAINS %@", "content", searchBar.text)
+        fetchedResultController = database.getFetchedResultController(sort, predicate: predicate)
+        fetchedResultController.delegate = self
+        NSFetchedResultsController.deleteCacheWithName("Simplenote")
+        fetchedResultController.performFetch(nil)
     }
 
     func pullToRefresh() {

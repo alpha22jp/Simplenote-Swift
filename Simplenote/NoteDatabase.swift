@@ -22,11 +22,8 @@ class NoteDatabase {
         self.context = context
     }
 
-    func fetchRequest() -> NSFetchRequest {
-        let req = NSFetchRequest(entityName: "Note")
-        let sort = NSSortDescriptor(key: "modifydate", ascending: true)
-        req.sortDescriptors = [sort]
-        return req
+    func getFetchRequest() -> NSFetchRequest {
+        return NSFetchRequest(entityName: "Note")
     }
 
     func createEntity(key: String) -> Note {
@@ -37,7 +34,7 @@ class NoteDatabase {
 
     func searchEntity(key: String) -> Note? {
         // EntityDescriptionのインスタンスを生成
-        let req = NSFetchRequest(entityName: "Note")
+        let req = getFetchRequest()
         req.returnsObjectsAsFaults = false
         req.predicate = NSPredicate(format: "%K = %@", "key", key)
 

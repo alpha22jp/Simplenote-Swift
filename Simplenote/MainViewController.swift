@@ -24,7 +24,13 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
-        fetchedResultController = NSFetchedResultsController(fetchRequest: database.fetchRequest(), managedObjectContext: database.context, sectionNameKeyPath: nil, cacheName: nil)
+        func fetchRequest() -> NSFetchRequest {
+            let sort = NSSortDescriptor(key: "modifydate", ascending: true)
+            let req = database.getFetchRequest()
+            req.sortDescriptors = [sort]
+            return req
+        }
+        fetchedResultController = NSFetchedResultsController(fetchRequest: fetchRequest(), managedObjectContext: database.context, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultController.delegate = self
         fetchedResultController.performFetch(nil)
 

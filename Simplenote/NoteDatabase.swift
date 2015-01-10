@@ -17,13 +17,20 @@ class Note: NSManagedObject {
 }
 
 class NoteDatabase {
-    var context: NSManagedObjectContext
+    let context: NSManagedObjectContext
     init(context: NSManagedObjectContext) {
         self.context = context
     }
 
-    func getFetchRequest() -> NSFetchRequest {
+    private func getFetchRequest() -> NSFetchRequest {
         return NSFetchRequest(entityName: "Note")
+    }
+
+    func getFetchedResultController(sort: NSSortDescriptor, predicate: NSPredicate!) -> NSFetchedResultsController {
+        let req = getFetchRequest()
+        req.sortDescriptors = [sort]
+        req.predicate = predicate
+        return NSFetchedResultsController(fetchRequest: req, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
     }
 
     func createEntity(key: String) -> Note {

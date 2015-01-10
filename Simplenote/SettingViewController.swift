@@ -8,14 +8,18 @@
 
 import UIKit
 
-class SettingViewController: UIViewController {
+class SettingViewController: UITableViewController {
 
     let setting = NSUserDefaults.standardUserDefaults()
 
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
 
-    @IBAction func okButtonTapped(sender: AnyObject) {
+    @IBAction func didCancelButtonTap(sender: AnyObject) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    @IBAction func didDoneButtonTap(sender: AnyObject) {
         println("email: \(email.text) password: \(password.text)")
         setting.setObject(email.text, forKey: "email")
         setting.setObject(password.text, forKey: "password")
@@ -40,6 +44,9 @@ class SettingViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 44
+    }
 
     /*
     // MARK: - Navigation

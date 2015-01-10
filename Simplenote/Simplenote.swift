@@ -12,8 +12,8 @@ import AlamofireSwiftyJSON
 
 class Simplenote {
     var token: String?
-    let email = "abc@example.com"
-    let password = "password"
+    var email: String?
+    var password: String?
 
     struct Note {
         var key: String
@@ -23,12 +23,19 @@ class Simplenote {
     }
 
     init(){}
+
+    func setAccountInfo(email: String, password: String){
+        self.email = email
+        self.password = password
+    }
+
     private func getToken(completion: ((token: String?)->Void)!) {
         if self.token != nil {
             completion?(token: self.token)
             return
         }
-        let str = "email=\(email)&password=\(password)"
+        if email == nil || password == nil { return }
+        let str = "email=\(email!)&password=\(password!)"
         let encodedStr = str.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
         let data = encodedStr?.dataUsingEncoding(NSUTF8StringEncoding)
         let base64data = data?.base64EncodedStringWithOptions(nil)
@@ -45,7 +52,7 @@ class Simplenote {
     func getIndex(completion: (([Note])->Void)!) {
         getToken { (token) in
             let url = "http://simple-note.appspot.com/api2/index"
-            let params = [ "auth": token!, "email": self.email ]
+            let params = [ "auth": token!, "email": self.email! ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
                 (_, _, json, _) in
                 println("Index: \(json)")
@@ -68,7 +75,7 @@ class Simplenote {
     func getNote(key: String, completion: ((note: Note, content: String)->Void)!) {
         getToken { (token) in
             let url = "https://simple-note.appspot.com/api2/data/" + key
-            let params = [ "auth": token!, "email": self.email ]
+            let params = [ "auth": token!, "email": self.email! ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
                 (_, _, json, _) in
                 println("Note: \(json)")

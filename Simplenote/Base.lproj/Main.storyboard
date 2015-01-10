@@ -48,7 +48,7 @@
         <!--Setting-->
         <scene sceneID="9Hy-jT-kps">
             <objects>
-                <viewController title="Setting" id="Mmm-jf-reT" customClass="SettingViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="setting" title="Setting" id="Mmm-jf-reT" customClass="SettingViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4sc-D9-bws"/>
                         <viewControllerLayoutGuide type="bottom" id="5qY-Ea-ybR"/>

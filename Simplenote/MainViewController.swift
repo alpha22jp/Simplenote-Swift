@@ -15,7 +15,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
 
     let simplenote = Simplenote()
     let database = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
-    var fetchedResultController = NSFetchedResultsController()
+    var fetchedResultController: NSFetchedResultsController!
     let searchController = UISearchController(searchResultsController: nil)
 
     override func viewDidLoad() {

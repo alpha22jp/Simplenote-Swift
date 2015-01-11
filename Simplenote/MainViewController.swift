@@ -57,6 +57,7 @@ class MainViewController: UITableViewController, UISearchBarDelegate, NSFetchedR
         fetchedResultController.delegate = self
         NSFetchedResultsController.deleteCacheWithName("Simplenote")
         fetchedResultController.performFetch(nil)
+        tableView.reloadData()
     }
 
     func pullToRefresh() {

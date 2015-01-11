@@ -27,7 +27,7 @@ class NoteDatabase {
         return NSFetchRequest(entityName: "Note")
     }
 
-    func getFetchedResultController(sort: NSSortDescriptor, predicate: NSPredicate!) -> NSFetchedResultsController {
+    func getFetchedResultsController(sort: NSSortDescriptor, predicate: NSPredicate!) -> NSFetchedResultsController {
         let req = getFetchRequest()
         req.sortDescriptors = [sort]
         req.predicate = predicate

@@ -15,7 +15,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
 
     let simplenote = Simplenote()
     let database = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
-    var fetchedResultController: NSFetchedResultsController!
+    var fetchedResultsController: NSFetchedResultsController!
     let searchController = UISearchController(searchResultsController: nil)
 
     override func viewDidLoad() {
@@ -29,9 +29,9 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
 
         let sort = NSSortDescriptor(key: "modifydate", ascending: false)
         let predicate = NSPredicate(format: "%K = FALSE", "isdeleted")
-        fetchedResultController = database.getFetchedResultController(sort, predicate: predicate)
-        fetchedResultController.delegate = self
-        fetchedResultController.performFetch(nil)
+        fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate)
+        fetchedResultsController.delegate = self
+        fetchedResultsController.performFetch(nil)
 
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = true // default
@@ -59,9 +59,9 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         println("Search text = \(searchController.searchBar.text)")
         let sort = NSSortDescriptor(key: "modifydate", ascending: false)
         let predicate: NSPredicate? = (searchController.searchBar.text == "" ? nil : NSPredicate(format: "%K CONTAINS %@", "content", searchController.searchBar.text))
-        fetchedResultController = database.getFetchedResultController(sort, predicate: predicate)
-        fetchedResultController.delegate = self
-        fetchedResultController.performFetch(nil)
+        fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate)
+        fetchedResultsController.delegate = self
+        fetchedResultsController.performFetch(nil)
         tableView.reloadData()
     }
 
@@ -101,18 +101,18 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // Return the number of sections.
-        return fetchedResultController.sections!.count
+        return fetchedResultsController.sections!.count
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
-        return fetchedResultController.sections![section].numberOfObjects
+        return fetchedResultsController.sections![section].numberOfObjects
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         // Configure the cell...
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
-        let note = fetchedResultController.objectAtIndexPath(indexPath) as Note
+        let note = fetchedResultsController.objectAtIndexPath(indexPath) as Note
         cell.textLabel?.text = note.content
         return cell
     }
@@ -166,7 +166,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         if segue.identifier == "select" {
             let cell = sender as UITableViewCell
             let indexPath = tableView.indexPathForCell(cell)
-            let note = fetchedResultController.objectAtIndexPath(indexPath!) as Note
+            let note = fetchedResultsController.objectAtIndexPath(indexPath!) as Note
             println("Content: \(note.content)")
             let controller = segue.destinationViewController as NoteViewController
             controller.note = note

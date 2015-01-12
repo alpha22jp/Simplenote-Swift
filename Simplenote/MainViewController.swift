@@ -82,44 +82,46 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         tableView.reloadData()
     }
 
-    func syncWithServer() {
-        simplenote.getIndex(analyzeNoteIndex)
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        alert.addAction(action)
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 
-    func analyzeNoteIndex(result: Simplenote.Result, noteAttrList: [Simplenote.NoteAttributes]!) {
-        if !result.success() {
-            println(__FUNCTION__, "result = \(result.rawValue)")
-            refreshControl?.endRefreshing()
-            let alert = UIAlertController(title: "Error", message: result.rawValue, preferredStyle: .Alert)
-            let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
-            alert.addAction(action)
-            presentViewController(alert, animated: true, completion: nil)
-            return
-        }
-        for attr in noteAttrList {
-            println("Search \(attr.key) in DB...")
-            var note: Note? = database.searchNote(attr.key)
-            println("Version check, local:\(note?.version), remote:\(attr.version)")
-            if attr.version > note?.version {
-                simplenote.getNote(attr.key) { (result, attr, content) in
-                    if !result.success() {
-                        // TODO: ここでもエラー通知が必要か？
-                        return
+    func syncWithServer() {
+        simplenote.getIndex { (result, noteAttrList) in
+            if !result.success() {
+                println(__FUNCTION__, "result = \(result.rawValue)")
+                self.refreshControl?.endRefreshing()
+                self.showAlert("Error", message: result.rawValue)
+                return
+            }
+            for attr in noteAttrList {
+                println("Search \(attr.key) in DB...")
+                var note: Note? = self.database.searchNote(attr.key)
+                println("Version check, local:\(note?.version), remote:\(attr.version)")
+                if attr.version > note?.version {
+                    self.simplenote.getNote(attr.key) { (result, attr, content) in
+                        if !result.success() {
+                            // TODO: ここでもエラー通知が必要か？
+                            return
+                        }
+                        if note == nil {
+                            println("Creating new note in DB...")
+                            note = self.database.createNote(attr.key)
+                        }
+                        note!.createdate = attr.createdate
+                        note!.modifydate = attr.modifydate
+                        note!.version = attr.version
+                        note!.isdeleted = (attr.deleted == 1)
+                        note!.content = content
+                        self.database.saveContext()
                     }
-                    if note == nil {
-                        println("Creating new note in DB...")
-                        note = self.database.createNote(attr.key)
-                    }
-                    note!.createdate = attr.createdate
-                    note!.modifydate = attr.modifydate
-                    note!.version = attr.version
-                    note!.isdeleted = (attr.deleted == 1)
-                    note!.content = content
-                    self.database.saveContext()
                 }
             }
+            self.refreshControl?.endRefreshing()
         }
-        refreshControl?.endRefreshing()
     }
 
     // MARK: - Table view data source

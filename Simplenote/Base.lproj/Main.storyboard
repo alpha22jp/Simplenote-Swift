@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
-        <!--Note List-->
+        <!--Note List View-->
         <scene sceneID="JqN-z9-zIe">
             <objects>
-                <tableViewController title="Note List" id="84D-EX-Mkl" customClass="MainViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Note List View" id="84D-EX-Mkl" customClass="MainViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="wfY-22-YjK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -48,10 +48,10 @@
             </objects>
             <point key="canvasLocation" x="324.5" y="-289.5"/>
         </scene>
-        <!--Setting-->
+        <!--Setting View-->
         <scene sceneID="YZM-Os-CPK">
             <objects>
-                <tableViewController storyboardIdentifier="setting" title="Setting" id="mnR-Ky-XJy" customClass="SettingViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="setting" title="Setting View" id="mnR-Ky-XJy" customClass="SettingViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="B6h-TZ-9xK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -126,10 +126,10 @@
             </objects>
             <point key="canvasLocation" x="790" y="377"/>
         </scene>
-        <!--Note-->
+        <!--Note View-->
         <scene sceneID="NYj-pi-w1Z">
             <objects>
-                <viewController storyboardIdentifier="note" title="Note" id="n3d-Rl-VSK" customClass="NoteViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="note" title="Note View" id="n3d-Rl-VSK" customClass="NoteViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mc1-MM-uNT"/>
                         <viewControllerLayoutGuide type="bottom" id="XV8-Q9-8cv"/>

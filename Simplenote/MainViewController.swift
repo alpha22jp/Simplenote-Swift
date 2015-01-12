@@ -97,6 +97,12 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         }
     }
 
+    // MARK: - Delegated functions for NSFetchedResultsController
+
+    func controllerDidChangeContent(controller: NSFetchedResultsController!) {
+        tableView.reloadData()
+    }
+
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -115,10 +121,6 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         let note = fetchedResultsController.objectAtIndexPath(indexPath) as Note
         cell.textLabel?.text = note.content
         return cell
-    }
-
-    func controllerDidChangeContent(controller: NSFetchedResultsController!) {
-        tableView.reloadData()
     }
 
     /*

@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetchedResultsControllerDelegate {
+class MainViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     @IBOutlet var noteListTable: UITableView!
 
@@ -20,7 +20,6 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
     let simplenote = Simplenote.sharedInstance
     let database = NoteDatabase.sharedInstance
     var fetchedResultsController: NSFetchedResultsController!
-    let searchController = UISearchController(searchResultsController: nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,16 +40,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         fetchedResultsController = getDefaultFetchedResultsController()
         fetchedResultsController.performFetch(nil)
 
-        searchController.searchResultsUpdater = self
-        searchController.hidesNavigationBarDuringPresentation = true // default
-        searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.sizeToFit()
-        self.noteListTable.tableHeaderView = searchController.searchBar
-
-        // これを設定しないと、検索状態から詳細画面に遷移した際に検索バーが残ってしまう。
-        definesPresentationContext = true
-
-        var refresh = UIRefreshControl()
+        let refresh = UIRefreshControl()
         refresh.attributedTitle = NSAttributedString(string: "Loading...")
         refresh.addTarget(self, action: "syncWithServer", forControlEvents:.ValueChanged)
         self.refreshControl = refresh
@@ -65,21 +55,6 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         let sort = NSSortDescriptor(key: "modifydate", ascending: false)
         let predicate = NSPredicate(format: "%K = FALSE", "isdeleted")
         return database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
-    }
-
-    // MARK: UISearchResultsUpdating
-
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        println("Search text = \(searchController.searchBar.text)")
-        if searchController.searchBar.text == "" {
-            fetchedResultsController = getDefaultFetchedResultsController()
-        } else {
-            let sort = NSSortDescriptor(key: "modifydate", ascending: false)
-            let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS %@", "isdeleted", "content", searchController.searchBar.text)
-            fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
-        }
-        fetchedResultsController.performFetch(nil)
-        tableView.reloadData()
     }
 
     private func showAlert(title: String, message: String) {
@@ -198,6 +173,40 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
             let controller = segue.destinationViewController as NoteViewController
             controller.note = note
         }
+    }
+
+}
+
+class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdating {
+
+    let searchController = UISearchController(searchResultsController: nil)
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = true // default
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.sizeToFit()
+        self.noteListTable.tableHeaderView = searchController.searchBar
+
+        // これを設定しないと、検索状態から詳細画面に遷移した際に検索バーが残ってしまう。
+        definesPresentationContext = true
+    }
+
+    // MARK: UISearchResultsUpdating
+
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        println("Search text = \(searchController.searchBar.text)")
+        if searchController.searchBar.text == "" {
+            fetchedResultsController = getDefaultFetchedResultsController()
+        } else {
+            let sort = NSSortDescriptor(key: "modifydate", ascending: false)
+            let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS %@", "isdeleted", "content", searchController.searchBar.text)
+            fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
+        }
+        fetchedResultsController.performFetch(nil)
+        tableView.reloadData()
     }
 
 }

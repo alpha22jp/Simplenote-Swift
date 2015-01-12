@@ -92,13 +92,13 @@ class Simplenote {
                     }
                 }
             }
-            completion?(result, result == Result.Success ? self.token : nil)
+            completion?(result, result.success() ? self.token : nil)
         }
     }
 
     func getIndex(completion: ((Result, [NoteAttributes]!)->Void)!) {
         getToken { (result, token) in
-            if result != Result.Success {
+            if !result.success() {
                 completion?(result, nil)
                 return
             }
@@ -135,7 +135,7 @@ class Simplenote {
 
     func getNote(key: String, completion: ((Result, NoteAttributes!, String!)->Void)!) {
         getToken { (result, token) in
-            if result != Result.Success {
+            if !result.success() {
                 completion?(result, nil, nil)
                 return
             }

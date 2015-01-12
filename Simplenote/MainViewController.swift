@@ -31,10 +31,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
-        let sort = NSSortDescriptor(key: "modifydate", ascending: false)
-        let predicate = NSPredicate(format: "%K = FALSE", "isdeleted")
-        fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate)
-        fetchedResultsController.delegate = self
+        fetchedResultsController = getDefaultFetchedResultsController()
         fetchedResultsController.performFetch(nil)
 
         searchController.searchResultsUpdater = self
@@ -57,14 +54,26 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         // Dispose of any resources that can be recreated.
     }
 
+    private func getDefaultFetchedResultsController() -> NSFetchedResultsController {
+        let sort = NSSortDescriptor(key: "modifydate", ascending: false)
+        let predicate = NSPredicate(format: "%K = FALSE", "isdeleted")
+        let controller = database.getFetchedResultsController(sort, predicate: predicate)
+        controller.delegate = self
+        return controller
+    }
+
     // MARK: UISearchResultsUpdating
-    
+
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         println("Search text = \(searchController.searchBar.text)")
-        let sort = NSSortDescriptor(key: "modifydate", ascending: false)
-        let predicate: NSPredicate? = (searchController.searchBar.text == "" ? nil : NSPredicate(format: "%K CONTAINS %@", "content", searchController.searchBar.text))
-        fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate)
-        fetchedResultsController.delegate = self
+        if searchController.searchBar.text == "" {
+            fetchedResultsController = getDefaultFetchedResultsController()
+        } else {
+            let sort = NSSortDescriptor(key: "modifydate", ascending: false)
+            let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS %@", "isdeleted", "content", searchController.searchBar.text)
+            fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate)
+            fetchedResultsController.delegate = self
+        }
         fetchedResultsController.performFetch(nil)
         tableView.reloadData()
     }

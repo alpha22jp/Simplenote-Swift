@@ -79,13 +79,25 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         simplenote.getIndex(analyzeNoteIndex)
     }
 
-    func analyzeNoteIndex(noteArray: [Simplenote.Note]) {
+    func analyzeNoteIndex(result: Simplenote.Result, noteArray: [Simplenote.Note]!) {
+        if result != Simplenote.Result.Success {
+            println(__FUNCTION__, ": result = \(result.rawValue)")
+            refreshControl?.endRefreshing()
+            let alert = UIAlertController(title: "Error", message: result.rawValue, preferredStyle: .Alert)
+            let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            alert.addAction(action)
+            presentViewController(alert, animated: true, completion: nil)
+            return
+        }
         for note in noteArray {
             println("Search \(note.key)...")
             var entity: Note? = database.searchEntity(note.key)
             println("Version check, local:\(entity?.version), remote:\(note.version)")
             if note.version > entity?.version {
-                simplenote.getNote(note.key) { (note, content) in
+                simplenote.getNote(note.key) { (result, note, content) in
+                    if result != Simplenote.Result.Success {
+                        return
+                    }
                     if entity == nil {
                         println("Creating new entity...")
                         entity = self.database.createEntity(note.key)

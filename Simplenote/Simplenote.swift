@@ -23,6 +23,14 @@ class Simplenote {
         var deleted: Int32
     }
 
+    enum Result: String {
+        case Success = "Success"
+        case NoAccountInformation = "No Account Information"
+        case ServerConnectionError = "Server Connection Error"
+        case UserAuthenticationError = "User Authentication Error"
+        case UnknownError = "Unknown Error"
+    }
+
     init(){}
 
     func setAccountInfo(email: String, password: String){
@@ -30,28 +38,59 @@ class Simplenote {
         self.password = password
     }
 
-    private func getToken(completion: ((token: String?)->Void)!) {
+    private func getToken(completion: ((Result, String?)->Void)!) {
+        // トークンを取得済みの場合は、サーバーから取得しないで再利用する
+        // TODO: トークンがexpireしていた場合の対応が必要
         if self.token != nil {
-            completion?(token: self.token)
+            completion?(Result.Success, self.token)
             return
         }
-        if email == nil || password == nil { return }
+        // アカウント情報が設定されているかを確認
+        if email == nil || password == nil {
+            completion?(Result.NoAccountInformation, nil)
+            return
+        }
+        // パラメータを生成する (URLエンコード＆base64エンコード)
         let str = "email=\(email!)&password=\(password!)"
         let encodedStr = str.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
         let data = encodedStr?.dataUsingEncoding(NSUTF8StringEncoding)
         let base64data = data?.base64EncodedStringWithOptions(nil)
         let url = "http://simple-note.appspot.com/api/login"
         let params = [ base64data!: "" ]
+        // サーバーにリクエストを送信してレスポンスを取得
         Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
-            (_, _, res, _) in
-            self.token = res
-            println("Token: \(self.token)")
-            completion?(token: res)
+            (_, res, data, _) in
+            println("Status Code: \(res?.statusCode)")
+            println("Data: \(data)")
+            var statusCode = 0
+            var result = Result.UnknownError
+            if let _res = res {
+                statusCode = _res.statusCode
+            }
+            // ステータスコードに応じてresultを設定
+            switch statusCode {
+            case 200:
+                if let _data = data {
+                    if _data != "" {
+                        result = Result.Success
+                        self.token = _data
+                    }
+                }
+            case 400: // ユーザー認証失敗の場合は400が返る
+                result = Result.UserAuthenticationError
+            default: // それ以外は一律サーバー接続エラーとする
+                result = Result.ServerConnectionError
+            }
+            completion?(result, result == Result.Success ? self.token : nil)
         }
     }
 
-    func getIndex(completion: (([Note])->Void)!) {
-        getToken { (token) in
+    func getIndex(completion: ((Result, [Note]!)->Void)!) {
+        getToken { (result, token) in
+            if result != Result.Success {
+                completion?(result, nil)
+                return
+            }
             let url = "http://simple-note.appspot.com/api2/index"
             let params = [ "auth": token!, "email": self.email! ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
@@ -69,13 +108,17 @@ class Simplenote {
                                     deleted: data[i]["deleted"].int32Value)
                     note_array.append(note)
                 }
-                completion?(note_array)
+                completion?(Result.Success, note_array)
             }
         }
     }
 
-    func getNote(key: String, completion: ((note: Note, content: String)->Void)!) {
-        getToken { (token) in
+    func getNote(key: String, completion: ((Result, Note!, String!)->Void)!) {
+        getToken { (result, token) in
+            if result != Result.Success {
+                completion?(result, nil, nil)
+                return
+            }
             let url = "https://simple-note.appspot.com/api2/data/" + key
             let params = [ "auth": token!, "email": self.email! ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
@@ -87,7 +130,7 @@ class Simplenote {
                                 version: json["version"].int32Value,
                                 deleted: json["deleted"].int32Value)
                 let content = json["content"].stringValue
-                completion?(note: note, content: content)
+                completion?(Result.Success, note, content)
             }
         }
     }

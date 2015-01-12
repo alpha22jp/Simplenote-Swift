@@ -34,9 +34,9 @@
                                 <segue destination="pxS-9s-y5F" kind="presentation" id="peQ-Ew-rWI"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ayY-d2-ZBh">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="ayY-d2-ZBh">
                             <connections>
-                                <segue destination="n3d-Rl-VSK" kind="show" identifier="add" id="Idh-AL-fwc"/>
+                                <action selector="didRefreshButtonTap:" destination="84D-EX-Mkl" id="2gV-ry-MK8"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -193,7 +193,4 @@
             <point key="canvasLocation" x="324" y="377"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="WwH-Zb-16O"/>
-    </inferredMetricsTieBreakers>
 </document>

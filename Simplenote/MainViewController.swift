@@ -13,6 +13,10 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
 
     @IBOutlet var noteListTable: UITableView!
 
+    @IBAction func didRefreshButtonTap(sender: AnyObject) {
+        syncWithServer()
+    }
+
     let simplenote = Simplenote()
     let database = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
     var fetchedResultsController: NSFetchedResultsController!
@@ -44,7 +48,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
 
         var refresh = UIRefreshControl()
         refresh.attributedTitle = NSAttributedString(string: "Loading...")
-        refresh.addTarget(self, action: "pullToRefresh", forControlEvents:.ValueChanged)
+        refresh.addTarget(self, action: "syncWithServer", forControlEvents:.ValueChanged)
         self.refreshControl = refresh
     }
 
@@ -65,7 +69,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         tableView.reloadData()
     }
 
-    func pullToRefresh() {
+    func syncWithServer() {
         let setting = NSUserDefaults.standardUserDefaults()
         let email = setting.stringForKey("email")
         let password = setting.stringForKey("password")

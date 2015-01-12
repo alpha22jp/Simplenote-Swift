@@ -18,7 +18,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
     }
 
     let simplenote = Simplenote.sharedInstance
-    let database = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
+    let database = NoteDatabase.sharedInstance
     var fetchedResultsController: NSFetchedResultsController!
     let searchController = UISearchController(searchResultsController: nil)
 
@@ -115,7 +115,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
                     note!.version = attr.version
                     note!.isdeleted = (attr.deleted == 1)
                     note!.content = content
-                    self.database.update()
+                    self.database.saveContext()
                 }
             }
         }

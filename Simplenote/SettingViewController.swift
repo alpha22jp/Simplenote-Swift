@@ -12,6 +12,7 @@ class SettingViewController: UITableViewController {
 
     let setting = NSUserDefaults.standardUserDefaults()
     let simplenote = Simplenote.sharedInstance
+    let database = NoteDatabase.sharedInstance
 
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
@@ -24,6 +25,7 @@ class SettingViewController: UITableViewController {
         setting.setObject(email.text, forKey: "email")
         setting.setObject(password.text, forKey: "password")
         simplenote.setAccountInfo(email.text, password: password.text)
+        database.deleteAllNotes()
 
         dismissViewControllerAnimated(true, completion: nil)
     }

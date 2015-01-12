@@ -11,8 +11,6 @@ import CoreData
 
 class MainViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
-    @IBOutlet var noteListTable: UITableView!
-
     @IBAction func didRefreshButtonTap(sender: AnyObject) {
         syncWithServer()
     }
@@ -64,7 +62,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
-    func syncWithServer() {
+    private func syncWithServer() {
         simplenote.getIndex { (result, noteAttrList) in
             if !result.success() {
                 println(__FUNCTION__, "result = \(result.rawValue)")
@@ -165,13 +163,16 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
         println("segue.identifier: \(segue.identifier)")
-        if segue.identifier == "select" {
+        if segue.identifier == "note" {
+            // Navigate to NoteView (show (e.g. push))
             let cell = sender as UITableViewCell
             let indexPath = tableView.indexPathForCell(cell)
             let note = fetchedResultsController.objectAtIndexPath(indexPath!) as Note
-            println("Content: \(note.content)")
             let controller = segue.destinationViewController as NoteViewController
+            // 選択されているcellに対応するnoteをNoteViewに渡す
             controller.note = note
+        } else if segue.identifier == "setting" {
+            // Navigate to SettingView (present modally)
         }
     }
 
@@ -188,7 +189,7 @@ class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdati
         searchController.hidesNavigationBarDuringPresentation = true // default
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
-        self.noteListTable.tableHeaderView = searchController.searchBar
+        self.tableView.tableHeaderView = searchController.searchBar
 
         // これを設定しないと、検索状態から詳細画面に遷移した際に検索バーが残ってしまう。
         definesPresentationContext = true

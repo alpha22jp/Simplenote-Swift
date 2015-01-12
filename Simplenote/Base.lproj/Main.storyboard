@@ -19,7 +19,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="n3d-Rl-VSK" kind="show" identifier="select" id="WwH-Zb-16O"/>
+                                    <segue destination="n3d-Rl-VSK" kind="show" identifier="note" id="WwH-Zb-16O"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -31,7 +31,7 @@
                     <navigationItem key="navigationItem" title="Notes" id="OO0-lL-mhN">
                         <barButtonItem key="leftBarButtonItem" title="Setting" id="l99-C0-YZK">
                             <connections>
-                                <segue destination="pxS-9s-y5F" kind="presentation" id="peQ-Ew-rWI"/>
+                                <segue destination="pxS-9s-y5F" kind="presentation" identifier="setting" id="peQ-Ew-rWI"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="ayY-d2-ZBh">
@@ -40,9 +40,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="noteListTable" destination="wfY-22-YjK" id="HMQ-mF-2f9"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pxx-Ar-mxs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

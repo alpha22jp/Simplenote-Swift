@@ -29,6 +29,8 @@ class Simplenote {
         case ServerConnectionError = "Server Connection Error"
         case UserAuthenticationError = "User Authentication Error"
         case UnknownError = "Unknown Error"
+
+        func success() -> Bool { return (self == Success) }
     }
 
     init(){}
@@ -36,6 +38,20 @@ class Simplenote {
     func setAccountInfo(email: String, password: String){
         self.email = email
         self.password = password
+    }
+
+    private func statusCodeToResult(statusCode: Int) -> Result {
+        // ステータスコードに応じてresultを設定
+        switch statusCode {
+        case 200:
+            return Result.Success
+        case 400:
+            // ユーザー認証失敗の場合は400が返る
+            return Result.UserAuthenticationError
+        default:
+            // それ以外は一律サーバー接続エラーとする
+            return Result.ServerConnectionError
+        }
     }
 
     private func getToken(completion: ((Result, String?)->Void)!) {
@@ -60,26 +76,21 @@ class Simplenote {
         // サーバーにリクエストを送信してレスポンスを取得
         Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
             (_, res, data, _) in
-            println("Status Code: \(res?.statusCode)")
+            println(__FUNCTION__, "Status Code: \(res?.statusCode)")
             println("Data: \(data)")
             var statusCode = 0
-            var result = Result.UnknownError
             if let _res = res {
                 statusCode = _res.statusCode
             }
-            // ステータスコードに応じてresultを設定
-            switch statusCode {
-            case 200:
+            var result = self.statusCodeToResult(statusCode)
+            if result.success() {
+                result = Result.UnknownError
                 if let _data = data {
                     if _data != "" {
                         result = Result.Success
                         self.token = _data
                     }
                 }
-            case 400: // ユーザー認証失敗の場合は400が返る
-                result = Result.UserAuthenticationError
-            default: // それ以外は一律サーバー接続エラーとする
-                result = Result.ServerConnectionError
             }
             completion?(result, result == Result.Success ? self.token : nil)
         }
@@ -94,8 +105,17 @@ class Simplenote {
             let url = "http://simple-note.appspot.com/api2/index"
             let params = [ "auth": token!, "email": self.email! ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
-                (_, _, json, _) in
-                println("Index: \(json)")
+                (_, res, json, _) in
+                println(__FUNCTION__, "Status Code: \(res?.statusCode)")
+                var statusCode = 0
+                if let _res = res {
+                    statusCode = _res.statusCode
+                }
+                var result = self.statusCodeToResult(statusCode)
+                if !result.success() {
+                    completion?(result, nil)
+                    return
+                }
                 let count: Int = json["count"].intValue
                 println("Note count: \(count)")
                 let data = json["data"]
@@ -122,7 +142,17 @@ class Simplenote {
             let url = "https://simple-note.appspot.com/api2/data/" + key
             let params = [ "auth": token!, "email": self.email! ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
-                (_, _, json, _) in
+                (_, res, json, _) in
+                println(__FUNCTION__, "Status Code: \(res?.statusCode)")
+                var statusCode = 0
+                if let _res = res {
+                    statusCode = _res.statusCode
+                }
+                var result = self.statusCodeToResult(statusCode)
+                if !result.success() {
+                    completion?(result, nil, nil)
+                    return
+                }
                 println("Note: \(json)")
                 let attr = NoteAttributes(key: json["key"].stringValue,
                                           createdate: json["createdate"].doubleValue,

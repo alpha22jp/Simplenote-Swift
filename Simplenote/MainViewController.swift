@@ -90,8 +90,8 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
     }
 
     func analyzeNoteIndex(result: Simplenote.Result, noteAttrList: [Simplenote.NoteAttributes]!) {
-        if result != Simplenote.Result.Success {
-            println(__FUNCTION__, ": result = \(result.rawValue)")
+        if !result.success() {
+            println(__FUNCTION__, "result = \(result.rawValue)")
             refreshControl?.endRefreshing()
             let alert = UIAlertController(title: "Error", message: result.rawValue, preferredStyle: .Alert)
             let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
@@ -105,7 +105,8 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
             println("Version check, local:\(note?.version), remote:\(attr.version)")
             if attr.version > note?.version {
                 simplenote.getNote(attr.key) { (result, attr, content) in
-                    if result != Simplenote.Result.Success {
+                    if !result.success() {
+                        // TODO: ここでもエラー通知が必要か？
                         return
                     }
                     if note == nil {

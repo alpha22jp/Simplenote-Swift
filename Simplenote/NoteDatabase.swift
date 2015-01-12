@@ -58,6 +58,33 @@ class NoteDatabase {
         return nil
     }
 
+    func deleteNote(note: Note) {
+        context.deleteObject(note)
+        update()
+    }
+
+    func deleteNoteByKey(key: String) {
+        let note = searchNote(key)
+        if let _note = note {
+            deleteNote(_note)
+        }
+    }
+
+    func deleteAllNotes() {
+        // EntityDescriptionのインスタンスを生成
+        let req = getFetchRequest()
+        req.returnsObjectsAsFaults = false
+
+        // フェッチリクエストの実行
+        let results = context.executeFetchRequest(req, error: nil)
+        if let notes = results as? [Note] {
+            for note in notes {
+                context.deleteObject(note)
+            }
+            update()
+        }
+    }
+
     func update() {
         context.save(nil)
     }

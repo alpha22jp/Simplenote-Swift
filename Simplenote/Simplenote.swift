@@ -15,7 +15,7 @@ class Simplenote {
     var email: String?
     var password: String?
 
-    struct Note {
+    struct NoteAttributes {
         var key: String
         var createdate: NSTimeInterval
         var modifydate: NSTimeInterval
@@ -85,7 +85,7 @@ class Simplenote {
         }
     }
 
-    func getIndex(completion: ((Result, [Note]!)->Void)!) {
+    func getIndex(completion: ((Result, [NoteAttributes]!)->Void)!) {
         getToken { (result, token) in
             if result != Result.Success {
                 completion?(result, nil)
@@ -99,21 +99,21 @@ class Simplenote {
                 let count: Int = json["count"].intValue
                 println("Note count: \(count)")
                 let data = json["data"]
-                var note_array: [Note] = []
+                var noteAttrList: [NoteAttributes] = []
                 for i in 0 ..< count {
-                    let note = Note(key: data[i]["key"].stringValue,
-                                    createdate: data[i]["createdate"].doubleValue,
-                                    modifydate: data[i]["modifydate"].doubleValue,
-                                    version: data[i]["version"].int32Value,
-                                    deleted: data[i]["deleted"].int32Value)
-                    note_array.append(note)
+                    let attr = NoteAttributes(key: data[i]["key"].stringValue,
+                                              createdate: data[i]["createdate"].doubleValue,
+                                              modifydate: data[i]["modifydate"].doubleValue,
+                                              version: data[i]["version"].int32Value,
+                                              deleted: data[i]["deleted"].int32Value)
+                    noteAttrList.append(attr)
                 }
-                completion?(Result.Success, note_array)
+                completion?(Result.Success, noteAttrList)
             }
         }
     }
 
-    func getNote(key: String, completion: ((Result, Note!, String!)->Void)!) {
+    func getNote(key: String, completion: ((Result, NoteAttributes!, String!)->Void)!) {
         getToken { (result, token) in
             if result != Result.Success {
                 completion?(result, nil, nil)
@@ -124,13 +124,13 @@ class Simplenote {
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
                 (_, _, json, _) in
                 println("Note: \(json)")
-                let note = Note(key: json["key"].stringValue,
-                                createdate: json["createdate"].doubleValue,
-                                modifydate: json["modifydate"].doubleValue,
-                                version: json["version"].int32Value,
-                                deleted: json["deleted"].int32Value)
+                let attr = NoteAttributes(key: json["key"].stringValue,
+                                          createdate: json["createdate"].doubleValue,
+                                          modifydate: json["modifydate"].doubleValue,
+                                          version: json["version"].int32Value,
+                                          deleted: json["deleted"].int32Value)
                 let content = json["content"].stringValue
-                completion?(Result.Success, note, content)
+                completion?(Result.Success, attr, content)
             }
         }
     }

@@ -89,7 +89,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         simplenote.getIndex(analyzeNoteIndex)
     }
 
-    func analyzeNoteIndex(result: Simplenote.Result, noteArray: [Simplenote.Note]!) {
+    func analyzeNoteIndex(result: Simplenote.Result, noteAttrList: [Simplenote.NoteAttributes]!) {
         if result != Simplenote.Result.Success {
             println(__FUNCTION__, ": result = \(result.rawValue)")
             refreshControl?.endRefreshing()
@@ -99,20 +99,25 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
             presentViewController(alert, animated: true, completion: nil)
             return
         }
-        for note in noteArray {
-            println("Search \(note.key)...")
-            var entity: Note? = database.searchEntity(note.key)
-            println("Version check, local:\(entity?.version), remote:\(note.version)")
-            if note.version > entity?.version {
-                simplenote.getNote(note.key) { (result, note, content) in
+        for attr in noteAttrList {
+            println("Search \(attr.key) in DB...")
+            var note: Note? = database.searchNote(attr.key)
+            println("Version check, local:\(note?.version), remote:\(attr.version)")
+            if attr.version > note?.version {
+                simplenote.getNote(attr.key) { (result, attr, content) in
                     if result != Simplenote.Result.Success {
                         return
                     }
-                    if entity == nil {
-                        println("Creating new entity...")
-                        entity = self.database.createEntity(note.key)
+                    if note == nil {
+                        println("Creating new note in DB...")
+                        note = self.database.createNote(attr.key)
                     }
-                    self.database.updateEntity(entity!, note: note, content: content)
+                    note!.createdate = attr.createdate
+                    note!.modifydate = attr.modifydate
+                    note!.version = attr.version
+                    note!.isdeleted = (attr.deleted == 1)
+                    note!.content = content
+                    self.database.update()
                 }
             }
         }

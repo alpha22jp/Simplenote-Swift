@@ -36,13 +36,13 @@ class NoteDatabase {
         return controller
     }
 
-    func createEntity(key: String) -> Note {
+    func createNote(key: String) -> Note {
         var note = NSEntityDescription.insertNewObjectForEntityForName("Note", inManagedObjectContext: context) as Note
         note.key = key
         return note
     }
 
-    func searchEntity(key: String) -> Note? {
+    func searchNote(key: String) -> Note? {
         // EntityDescriptionのインスタンスを生成
         let req = getFetchRequest()
         req.returnsObjectsAsFaults = false
@@ -58,12 +58,7 @@ class NoteDatabase {
         return nil
     }
 
-    func updateEntity(entity: Note, note: Simplenote.Note, content: String) {
-        entity.createdate = note.createdate
-        entity.modifydate = note.modifydate
-        entity.version = note.version
-        entity.isdeleted = (note.deleted == 1)
-        entity.content = content
+    func update() {
         context.save(nil)
     }
 }

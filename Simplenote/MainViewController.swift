@@ -17,7 +17,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         syncWithServer()
     }
 
-    let simplenote = Simplenote()
+    let simplenote = Simplenote.sharedInstance
     let database = NoteDatabase(context: (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext!)
     var fetchedResultsController: NSFetchedResultsController!
     let searchController = UISearchController(searchResultsController: nil)
@@ -30,6 +30,13 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+
+        let setting = NSUserDefaults.standardUserDefaults()
+        let email = setting.stringForKey("email")
+        let password = setting.stringForKey("password")
+        if email != nil && password != nil {
+            simplenote.setAccountInfo(email!, password: password!)
+        }
 
         fetchedResultsController = getDefaultFetchedResultsController()
         fetchedResultsController.performFetch(nil)
@@ -76,16 +83,6 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
     }
 
     func syncWithServer() {
-        let setting = NSUserDefaults.standardUserDefaults()
-        let email = setting.stringForKey("email")
-        let password = setting.stringForKey("password")
-        if email == nil || password == nil {
-            refreshControl?.endRefreshing()
-            var settingView = self.storyboard!.instantiateViewControllerWithIdentifier("setting") as UIViewController
-            self.presentViewController(settingView, animated: true, completion: nil)
-            return
-        }
-        simplenote.setAccountInfo(email!, password: password!)
         simplenote.getIndex(analyzeNoteIndex)
     }
 

@@ -11,6 +11,7 @@ import UIKit
 class SettingViewController: UITableViewController {
 
     let setting = NSUserDefaults.standardUserDefaults()
+    let simplenote = Simplenote.sharedInstance
 
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
@@ -20,9 +21,9 @@ class SettingViewController: UITableViewController {
     }
 
     @IBAction func didDoneButtonTap(sender: AnyObject) {
-        println("email: \(email.text) password: \(password.text)")
         setting.setObject(email.text, forKey: "email")
         setting.setObject(password.text, forKey: "password")
+        simplenote.setAccountInfo(email.text, password: password.text)
 
         dismissViewControllerAnimated(true, completion: nil)
     }

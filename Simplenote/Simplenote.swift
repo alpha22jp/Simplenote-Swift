@@ -10,7 +10,7 @@ import Alamofire
 import SwiftyJSON
 import AlamofireSwiftyJSON
 
-class Simplenote {
+final class Simplenote {
     var token: String?
     var email: String?
     var password: String?
@@ -33,11 +33,19 @@ class Simplenote {
         func success() -> Bool { return (self == Success) }
     }
 
-    init(){}
+    class var sharedInstance: Simplenote {
+        struct Static {
+            static let instance = Simplenote()
+        }
+        return Static.instance
+    }
+    private init(){}
 
     func setAccountInfo(email: String, password: String){
+        println("email: \(email) password: \(password)")
         self.email = email
         self.password = password
+        self.token = nil // アカウント情報が変更されたらトークンをリセット
     }
 
     private func statusCodeToResult(statusCode: Int) -> Result {

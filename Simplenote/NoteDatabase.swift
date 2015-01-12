@@ -27,11 +27,13 @@ class NoteDatabase {
         return NSFetchRequest(entityName: "Note")
     }
 
-    func getFetchedResultsController(sort: NSSortDescriptor, predicate: NSPredicate!) -> NSFetchedResultsController {
+    func getFetchedResultsController(sort: NSSortDescriptor, predicate: NSPredicate!, delegate: NSFetchedResultsControllerDelegate) -> NSFetchedResultsController {
         let req = getFetchRequest()
         req.sortDescriptors = [sort]
         req.predicate = predicate
-        return NSFetchedResultsController(fetchRequest: req, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        let controller = NSFetchedResultsController(fetchRequest: req, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        controller.delegate = delegate
+        return controller
     }
 
     func createEntity(key: String) -> Note {

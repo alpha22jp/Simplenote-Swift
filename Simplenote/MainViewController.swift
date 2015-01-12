@@ -57,9 +57,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
     private func getDefaultFetchedResultsController() -> NSFetchedResultsController {
         let sort = NSSortDescriptor(key: "modifydate", ascending: false)
         let predicate = NSPredicate(format: "%K = FALSE", "isdeleted")
-        let controller = database.getFetchedResultsController(sort, predicate: predicate)
-        controller.delegate = self
-        return controller
+        return database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
     }
 
     // MARK: UISearchResultsUpdating
@@ -71,8 +69,7 @@ class MainViewController: UITableViewController, UISearchResultsUpdating, NSFetc
         } else {
             let sort = NSSortDescriptor(key: "modifydate", ascending: false)
             let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS %@", "isdeleted", "content", searchController.searchBar.text)
-            fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate)
-            fetchedResultsController.delegate = self
+            fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
         }
         fetchedResultsController.performFetch(nil)
         tableView.reloadData()

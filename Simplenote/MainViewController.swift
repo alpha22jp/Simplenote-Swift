@@ -120,6 +120,13 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
         let note = fetchedResultsController.objectAtIndexPath(indexPath) as Note
         cell.textLabel?.text = note.content
+
+        let formatter = NSDateFormatter()
+        formatter.locale = NSLocale(localeIdentifier:"ja_JP")
+        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        let date = NSDate(timeIntervalSince1970: note.modifydate)
+        cell.detailTextLabel?.text = formatter.stringFromDate(date)
+
         return cell
     }
 

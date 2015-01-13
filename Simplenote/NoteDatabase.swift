@@ -17,7 +17,7 @@ class Note: NSManagedObject {
     @NSManaged var isdeleted: Bool
 }
 
-class NoteDatabase {
+final class NoteDatabase {
 
     class var sharedInstance: NoteDatabase {
         struct Static {

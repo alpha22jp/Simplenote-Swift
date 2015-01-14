@@ -10,6 +10,10 @@ import UIKit
 
 class SettingDetailController: UITableViewController {
 
+    let setting = NSUserDefaults.standardUserDefaults()
+    var type: String!
+    var items: [String]!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -20,14 +24,30 @@ class SettingDetailController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+
+        let indexPath = NSIndexPath(forRow: setting.integerForKey(type), inSection: 0)
+        self.tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: .None)
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
+    // MARK: - Table view delegate
+
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         cell?.accessoryType = .Checkmark
+
+        setting.setObject(indexPath.row, forKey: type)
+    }
+
+    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        let cell = tableView.cellForRowAtIndexPath(indexPath)
+        cell?.accessoryType = .None
     }
 
     // MARK: - Table view data source
@@ -41,13 +61,19 @@ class SettingDetailController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return 2
+        return items.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
 
         // Configure the cell...
+        cell.textLabel?.text = items[indexPath.row]
+        if setting.integerForKey(type) == indexPath.row {
+            cell.accessoryType = .Checkmark
+        } else {
+            cell.accessoryType = .None
+        }
 
         return cell
     }

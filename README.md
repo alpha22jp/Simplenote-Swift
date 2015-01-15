@@ -19,13 +19,7 @@
 ## How to build
 
 ```Shell
-git clone https://github.com/alpha22jp/Simplenote-Swift.git
-cd Simplenote-Swift
-git submodule init
-git submodule update
-cd Alamofire-SwiftyJSON
-git submodule init
-git submodule update
+git clone --recuesive https://github.com/alpha22jp/Simplenote-Swift.git
 ```
 
 Open `Simplenote.xcodeproj` by XCode and build it!

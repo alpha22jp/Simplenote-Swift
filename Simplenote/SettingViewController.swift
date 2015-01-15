@@ -17,7 +17,6 @@ class SettingViewController: UITableViewController {
 
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
-    @IBOutlet weak var sort: UILabel!
 
     @IBAction func didCancelButtonTap(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -46,8 +45,7 @@ class SettingViewController: UITableViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-
-        sort.text = sortItems[setting.integerForKey("sort")]
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,6 +55,14 @@ class SettingViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 44
+    }
+
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        if indexPath.section == 1 && indexPath.row == 0 {
+            cell.detailTextLabel?.text = sortItems[setting.integerForKey("sort")]
+        }
+        return cell
     }
 
     // MARK: - Navigation

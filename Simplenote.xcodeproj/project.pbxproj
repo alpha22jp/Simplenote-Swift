@@ -20,6 +20,7 @@
 		FF8F2B301A5D68AF007507B3 /* NoteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */; };
 		FFC9D33B1A5D842E002CD2FC /* Simplenote.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC9D33A1A5D842E002CD2FC /* Simplenote.swift */; };
 		FFD6121F1A6567F1006FA0EC /* SettingDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6121E1A6567F1006FA0EC /* SettingDetailController.swift */; };
+		FFD612231A680BAC006FA0EC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD612221A680BAC006FA0EC /* Settings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteDatabase.swift; sourceTree = "<group>"; };
 		FFC9D33A1A5D842E002CD2FC /* Simplenote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Simplenote.swift; sourceTree = "<group>"; };
 		FFD6121E1A6567F1006FA0EC /* SettingDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingDetailController.swift; sourceTree = "<group>"; };
+		FFD612221A680BAC006FA0EC /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */,
 				C73983A81A5574DB00C1E215 /* NoteViewController.swift */,
 				FFD6121E1A6567F1006FA0EC /* SettingDetailController.swift */,
+				FFD612221A680BAC006FA0EC /* Settings.swift */,
 				FF0450FF1A6025E900928F45 /* SettingViewController.swift */,
 				FFC9D33A1A5D842E002CD2FC /* Simplenote.swift */,
 				C7663EC61A5524F20030FAAF /* Images.xcassets */,
@@ -286,6 +289,7 @@
 				C73983A91A5574DB00C1E215 /* NoteViewController.swift in Sources */,
 				C73983A71A552A2F00C1E215 /* MainViewController.swift in Sources */,
 				FFD6121F1A6567F1006FA0EC /* SettingDetailController.swift in Sources */,
+				FFD612231A680BAC006FA0EC /* Settings.swift in Sources */,
 				FF0451001A6025E900928F45 /* SettingViewController.swift in Sources */,
 				FFC9D33B1A5D842E002CD2FC /* Simplenote.swift in Sources */,
 			);

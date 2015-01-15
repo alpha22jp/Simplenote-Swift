@@ -10,7 +10,7 @@ import UIKit
 
 class SettingViewController: UITableViewController {
 
-    let setting = NSUserDefaults.standardUserDefaults()
+    let setting = Settings.sharedInstance
     let simplenote = Simplenote.sharedInstance
     let database = NoteDatabase.sharedInstance
     let sortItems = ["Modify Date", "Create Date"]
@@ -24,8 +24,8 @@ class SettingViewController: UITableViewController {
     }
 
     @IBAction func didDoneButtonTap(sender: AnyObject) {
-        setting.setObject(email.text, forKey: "email")
-        setting.setObject(password.text, forKey: "password")
+        setting.email = email.text
+        setting.password = password.text
         simplenote.setAccountInfo(email.text, password: password.text)
         database.deleteAllNotes()
 
@@ -36,12 +36,8 @@ class SettingViewController: UITableViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        if let emailSaved = setting.stringForKey("email") {
-            email.text = emailSaved
-        }
-        if let passwordSaved = setting.stringForKey("password") {
-            password.text = passwordSaved
-        }
+        email.text = setting.email
+        password.text = setting.password
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -61,8 +57,8 @@ class SettingViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
         switch (indexPath.section, indexPath.row) {
-        case (1, 0): cell.detailTextLabel?.text = sortItems[setting.integerForKey("sort")]
-        case (1, 1): cell.detailTextLabel?.text = orderItems[setting.integerForKey("order")]
+        case (1, 0): cell.detailTextLabel?.text = sortItems[setting.sort]
+        case (1, 1): cell.detailTextLabel?.text = orderItems[setting.order]
         default: break
         }
         return cell

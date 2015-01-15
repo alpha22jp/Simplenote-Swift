@@ -13,7 +13,8 @@ class SettingViewController: UITableViewController {
     let setting = NSUserDefaults.standardUserDefaults()
     let simplenote = Simplenote.sharedInstance
     let database = NoteDatabase.sharedInstance
-    let sortItems = ["変更日時（新しい順）", "変更日時（古い順）", "作成日時（新しい順）", "作成日時（古い順）"]
+    let sortItems = ["Modify Date", "Create Date"]
+    let orderItems = ["Newest First", "Oldest First"]
 
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
@@ -59,8 +60,10 @@ class SettingViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-        if indexPath.section == 1 && indexPath.row == 0 {
-            cell.detailTextLabel?.text = sortItems[setting.integerForKey("sort")]
+        switch (indexPath.section, indexPath.row) {
+        case (1, 0): cell.detailTextLabel?.text = sortItems[setting.integerForKey("sort")]
+        case (1, 1): cell.detailTextLabel?.text = orderItems[setting.integerForKey("order")]
+        default: break
         }
         return cell
     }
@@ -72,13 +75,14 @@ class SettingViewController: UITableViewController {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         println("segue.identifier: \(segue.identifier)")
-        if segue.identifier == "detail" {
-            // Navigate to SettingDetail (show (e.g. push))
-            let cell = sender as UITableViewCell
-            let indexPath = tableView.indexPathForCell(cell)
-            let controller = segue.destinationViewController as SettingDetailController
+        let controller = segue.destinationViewController as SettingDetailController
+        // Navigate to SettingDetail (show (e.g. push))
+        if segue.identifier == "sortByDetail" {
             controller.type = "sort"
             controller.items = sortItems
+        } else if segue.identifier == "orderDetail" {
+            controller.type = "order"
+            controller.items = orderItems
         }
     }
 

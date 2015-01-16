@@ -8,28 +8,25 @@
 
 import Foundation
 
-class Settings {
+class Setting<T> {
     let userDefaults = NSUserDefaults.standardUserDefaults()
-    let initialValue = ["email":"", "password":"", "sort":0, "order":0]
+    var key: String
+    var initialValue: AnyObject
 
-    var getUserDefaults: NSUserDefaults { get { return userDefaults } }
+    init(key: String, initialValue: AnyObject){
+        self.key = key
+        self.initialValue = initialValue
+        userDefaults.registerDefaults([key: initialValue])
+    }
+    func set(value: AnyObject) { userDefaults.setObject(value, forKey: key) }
+    func get() -> T { return userDefaults.objectForKey(key) as T }
+}
 
-    var email: String {
-        get { return userDefaults.stringForKey("email")! }
-        set(val) { userDefaults.setObject(val, forKey: "email") }
-    }
-    var password: String {
-        get { return userDefaults.stringForKey("password")! }
-        set(val) { userDefaults.setObject(val, forKey: "password") }
-    }
-    var sort: Int {
-        get { return userDefaults.integerForKey("sort") }
-        set(val) { userDefaults.setObject(val, forKey: "sort") }
-    }
-    var order: Int {
-        get { return userDefaults.integerForKey("order") }
-        set(val) { userDefaults.setObject(val, forKey: "order") }
-    }
+class Settings {
+    let email = Setting<String>(key: "email", initialValue: "")
+    let password = Setting<String>(key: "password", initialValue: "")
+    let sort = Setting<Int>(key: "sort", initialValue: 0)
+    let order = Setting<Int>(key: "order", initialValue: 0)
 
     class var sharedInstance: Settings {
         struct Static {
@@ -37,8 +34,5 @@ class Settings {
         }
         return Static.instance
     }
-    private init() {
-        userDefaults.registerDefaults(initialValue)
-    }
-
+    private init() {}
 }

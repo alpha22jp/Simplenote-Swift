@@ -10,8 +10,7 @@ import UIKit
 
 class SettingDetailController: UITableViewController {
 
-    let setting = Settings.sharedInstance
-    var type: String!
+    var setting: Setting<Int>!
     var items: [String]!
 
     override func viewDidLoad() {
@@ -27,7 +26,7 @@ class SettingDetailController: UITableViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
-        let indexPath = NSIndexPath(forRow: setting.userDefaults.integerForKey(type), inSection: 0)
+        let indexPath = NSIndexPath(forRow: setting.get(), inSection: 0)
         self.tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: .None)
     }
 
@@ -42,7 +41,7 @@ class SettingDetailController: UITableViewController {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         cell?.accessoryType = .Checkmark
 
-        setting.userDefaults.setObject(indexPath.row, forKey: type)
+        setting.set(indexPath.row)
     }
 
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
@@ -69,7 +68,7 @@ class SettingDetailController: UITableViewController {
 
         // Configure the cell...
         cell.textLabel?.text = items[indexPath.row]
-        if setting.userDefaults.integerForKey(type) == indexPath.row {
+        if setting.get() == indexPath.row {
             cell.accessoryType = .Checkmark
         } else {
             cell.accessoryType = .None

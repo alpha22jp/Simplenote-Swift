@@ -15,6 +15,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         syncWithServer()
     }
 
+    let settings = Settings.sharedInstance
     let simplenote = Simplenote.sharedInstance
     let database = NoteDatabase.sharedInstance
     var fetchedResultsController: NSFetchedResultsController!
@@ -28,12 +29,9 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
-        let setting = NSUserDefaults.standardUserDefaults()
-        let email = setting.stringForKey("email")
-        let password = setting.stringForKey("password")
-        if email != nil && password != nil {
-            simplenote.setAccountInfo(email!, password: password!)
-        }
+        let email = settings.email.get()
+        let password = settings.password.get()
+        simplenote.setAccountInfo(email, password: password)
 
         fetchedResultsController = getDefaultFetchedResultsController()
         fetchedResultsController.performFetch(nil)
@@ -49,8 +47,18 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // Dispose of any resources that can be recreated.
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+
+        fetchedResultsController = getDefaultFetchedResultsController()
+        fetchedResultsController.performFetch(nil)
+        tableView.reloadData()
+    }
+
     private func getDefaultFetchedResultsController() -> NSFetchedResultsController {
-        let sort = NSSortDescriptor(key: "modifydate", ascending: false)
+        let key = (settings.sort.get() == 0 ? "modifydate" : "createdate")
+        let ascending = (settings.order.get() == 1)
+        let sort = NSSortDescriptor(key: key, ascending: ascending)
         let predicate = NSPredicate(format: "%K = FALSE", "isdeleted")
         return database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
     }
@@ -180,7 +188,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             let controller = segue.destinationViewController as NoteViewController
             // 選択されているcellに対応するnoteをNoteViewに渡す
             controller.note = note
-        } else if segue.identifier == "setting" {
+        } else if segue.identifier == "settings" {
             // Navigate to SettingView (present modally)
         }
     }
@@ -211,7 +219,9 @@ class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdati
         if searchController.searchBar.text == "" {
             fetchedResultsController = getDefaultFetchedResultsController()
         } else {
-            let sort = NSSortDescriptor(key: "modifydate", ascending: false)
+            let key = (settings.sort.get() == 0 ? "modifydate" : "createdate")
+            let ascending = (settings.order.get() == 1)
+            let sort = NSSortDescriptor(key: key, ascending: ascending)
             let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS %@", "isdeleted", "content", searchController.searchBar.text)
             fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
         }

@@ -11,24 +11,10 @@ import UIKit
 class SettingViewController: UITableViewController {
 
     let settings = Settings.sharedInstance
-    let simplenote = Simplenote.sharedInstance
-    let database = NoteDatabase.sharedInstance
     let sortItems = ["Modify Date", "Create Date"]
     let orderItems = ["Newest First", "Oldest First"]
 
-    @IBOutlet weak var email: UITextField!
-    @IBOutlet weak var password: UITextField!
-
-    @IBAction func didCancelButtonTap(sender: AnyObject) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-
     @IBAction func didDoneButtonTap(sender: AnyObject) {
-        settings.email.set(email.text)
-        settings.password.set(password.text)
-        simplenote.setAccountInfo(email.text, password: password.text)
-        database.deleteAllNotes()
-
         dismissViewControllerAnimated(true, completion: nil)
     }
 
@@ -36,8 +22,6 @@ class SettingViewController: UITableViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        email.text = settings.email.get()
-        password.text = settings.password.get()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -57,6 +41,9 @@ class SettingViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
         switch (indexPath.section, indexPath.row) {
+        case (0, 0):
+            let email = settings.email.get()
+            if email != "" { cell.detailTextLabel?.text = email }
         case (1, 0): cell.detailTextLabel?.text = sortItems[settings.sort.get()]
         case (1, 1): cell.detailTextLabel?.text = orderItems[settings.order.get()]
         default: break
@@ -71,12 +58,13 @@ class SettingViewController: UITableViewController {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         println("segue.identifier: \(segue.identifier)")
-        let controller = segue.destinationViewController as SettingDetailController
         // Navigate to SettingDetail (show (e.g. push))
         if segue.identifier == "sortByDetail" {
+            let controller = segue.destinationViewController as SettingDetailController
             controller.setting = settings.sort
             controller.items = sortItems
         } else if segue.identifier == "orderDetail" {
+            let controller = segue.destinationViewController as SettingDetailController
             controller.setting = settings.order
             controller.items = orderItems
         }

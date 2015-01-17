@@ -53,8 +53,8 @@ class SettingAccountController: UITableViewController {
     private func showActionSheet(title: String, message: String, handler: ()->Void) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
-            (action: UIAlertAction!) -> Void in handler()
+        let action = UIAlertAction(title: "OK", style: .Default) {
+            (_) -> Void in handler()
         }
         alert.addAction(cancel)
         alert.addAction(action)

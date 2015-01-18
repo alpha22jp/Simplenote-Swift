@@ -32,3 +32,7 @@ Open `Simplenote.xcodeproj` by XCode and build it!
 * Support Simplenote tags
 * Store password securely by KeyChain
 * Support multi languages
+
+## Tanks
+
+* Thanks to [designshock](http://www.easyicon.net/language.en/iconsearch/author:designshock/) for application icon

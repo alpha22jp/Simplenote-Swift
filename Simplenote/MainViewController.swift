@@ -200,7 +200,7 @@ class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdati
             let key = (settings.sort.get() == 0 ? "modifydate" : "createdate")
             let ascending = (settings.order.get() == 1)
             let sort = NSSortDescriptor(key: key, ascending: ascending)
-            let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS %@", "isdeleted", "content", searchController.searchBar.text)
+            let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS[cd] %@", "isdeleted", "content", searchController.searchBar.text)
             fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
         }
         fetchedResultsController.performFetch(nil)

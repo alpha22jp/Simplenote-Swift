@@ -11,9 +11,9 @@ import SwiftyJSON
 import AlamofireSwiftyJSON
 
 final class SimplenoteServer {
-    var token: String?
-    var email: String?
-    var password: String?
+    var token: String!
+    var email: String!
+    var password: String!
 
     struct NoteAttributes {
         var key: String
@@ -76,7 +76,7 @@ final class SimplenoteServer {
             return
         }
         // パラメータを生成する (URLエンコード＆base64エンコード)
-        let str = "email=\(email!)&password=\(password!)"
+        let str = "email=\(email)&password=\(password)"
         let encodedStr = str.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
         let data = encodedStr?.dataUsingEncoding(NSUTF8StringEncoding)
         let base64data = data?.base64EncodedStringWithOptions(nil)
@@ -101,7 +101,7 @@ final class SimplenoteServer {
                     }
                 }
             }
-            completion?(result, result.success() ? self.token : nil)
+            completion?(result, self.token ?? "")
         }
     }
 
@@ -126,7 +126,7 @@ final class SimplenoteServer {
                 return
             }
             let url = "http://simple-note.appspot.com/api2/index"
-            let params = [ "auth": token!, "email": self.email! ]
+            let params = [ "auth": token, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
                 (_, res, json, _) in
                 println(__FUNCTION__, "Status Code: \(res?.statusCode)")
@@ -159,7 +159,7 @@ final class SimplenoteServer {
                 return
             }
             let url = "https://simple-note.appspot.com/api2/data/" + key
-            let params = [ "auth": token!, "email": self.email! ]
+            let params = [ "auth": token, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
                 (_, res, json, _) in
                 println(__FUNCTION__, "Status Code: \(res?.statusCode)")

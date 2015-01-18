@@ -92,7 +92,15 @@ final class NoteDatabase {
     }
 
     private func getFetchRequest() -> NSFetchRequest {
-        return NSFetchRequest(entityName: "Note")
+        let req = NSFetchRequest(entityName: "Note")
+        req.returnsObjectsAsFaults = false
+        return req
+    }
+
+    private func executeFetch(req: NSFetchRequest) -> [Note] {
+        let results = managedObjectContext?.executeFetchRequest(req, error: nil)
+        let notes = results as? [Note]
+        return (notes ?? [])
     }
 
     func getFetchedResultsController(sort: NSSortDescriptor, predicate: NSPredicate!, delegate: NSFetchedResultsControllerDelegate) -> NSFetchedResultsController {
@@ -111,19 +119,10 @@ final class NoteDatabase {
     }
 
     func searchNote(key: String) -> Note? {
-        // EntityDescriptionのインスタンスを生成
         let req = getFetchRequest()
-        req.returnsObjectsAsFaults = false
         req.predicate = NSPredicate(format: "%K = %@", "key", key)
-
-        // フェッチリクエストの実行
-        let results = managedObjectContext?.executeFetchRequest(req, error: nil)
-        if let notes = results as? [Note] {
-            if notes.count > 0 {
-                return notes[0]
-            }
-        }
-        return nil
+        let notes = executeFetch(req)
+        return notes.count > 0 ? notes[0] : nil
     }
 
     func deleteNote(note: Note) {
@@ -139,27 +138,15 @@ final class NoteDatabase {
     }
 
     func deleteAllNotes() {
-        // EntityDescriptionのインスタンスを生成
-        let req = getFetchRequest()
-        req.returnsObjectsAsFaults = false
-
-        // フェッチリクエストの実行
-        let results = managedObjectContext?.executeFetchRequest(req, error: nil)
-        if let notes = results as? [Note] {
-            for note in notes {
-                managedObjectContext?.deleteObject(note)
-            }
-            saveContext()
+        let notes = executeFetch(getFetchRequest())
+        for note in notes {
+            managedObjectContext?.deleteObject(note)
         }
+        saveContext()
     }
 
     func isEmpty() -> Bool {
-        let req = getFetchRequest()
-        let results = managedObjectContext?.executeFetchRequest(req, error: nil)
-        if let notes = results as? [Note] {
-            return (notes.count == 0)
-        } else {
-            return true
-        }
+        let notes = executeFetch(getFetchRequest())
+        return (notes.count == 0)
     }
 }

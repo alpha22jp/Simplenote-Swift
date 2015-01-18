@@ -25,9 +25,11 @@ class NoteViewController: UIViewController, UIWebViewDelegate {
 
         if note.markdown {
             var markdown = Markdown()
-            let text = markdown.transform(note.content)
+            let cssPath = NSBundle.mainBundle().pathForResource("default", ofType: "css")
+            let htmlHeader = "<head><link href='\(cssPath!)' rel='stylesheet'/></head>"
+            let html = htmlHeader + markdown.transform(note.content)
             webView.delegate = self
-            webView.loadHTMLString(text, baseURL: nil)
+            webView.loadHTMLString(html, baseURL: NSBundle.mainBundle().bundleURL)
             view = webView
         } else {
             textView.text = note.content

@@ -18,6 +18,7 @@
 		FF0451001A6025E900928F45 /* SettingMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0450FF1A6025E900928F45 /* SettingMainViewController.swift */; };
 		FF37DDFA1A6A34D700DE52F9 /* SettingAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37DDF91A6A34D700DE52F9 /* SettingAccountViewController.swift */; };
 		FF37DE1F1A6B467F00DE52F9 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37DE1E1A6B467F00DE52F9 /* Markdown.swift */; };
+		FF37DE2B1A6BC29800DE52F9 /* default.css in Resources */ = {isa = PBXBuildFile; fileRef = FF37DE2A1A6BC29800DE52F9 /* default.css */; };
 		FF8F2B2E1A5D6713007507B3 /* AlamofireSwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8F2B291A5D6636007507B3 /* AlamofireSwiftyJSON.framework */; };
 		FF8F2B301A5D68AF007507B3 /* NoteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */; };
 		FFC9D33B1A5D842E002CD2FC /* SimplenoteServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC9D33A1A5D842E002CD2FC /* SimplenoteServer.swift */; };
@@ -65,6 +66,7 @@
 		FF0450FF1A6025E900928F45 /* SettingMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingMainViewController.swift; sourceTree = "<group>"; };
 		FF37DDF91A6A34D700DE52F9 /* SettingAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingAccountViewController.swift; sourceTree = "<group>"; };
 		FF37DE1E1A6B467F00DE52F9 /* Markdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Markdown.swift; path = Markingbird/Markingbird/Markdown.swift; sourceTree = SOURCE_ROOT; };
+		FF37DE2A1A6BC29800DE52F9 /* default.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = default.css; sourceTree = "<group>"; };
 		FF8F2B211A5D6635007507B3 /* Alamofire-SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Alamofire-SwiftyJSON.xcodeproj"; path = "Alamofire-SwiftyJSON/Alamofire-SwiftyJSON.xcodeproj"; sourceTree = "<group>"; };
 		FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteDatabase.swift; sourceTree = "<group>"; };
 		FFC9D33A1A5D842E002CD2FC /* SimplenoteServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplenoteServer.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 		C7663EB91A5524F10030FAAF /* Simplenote */ = {
 			isa = PBXGroup;
 			children = (
+				FF37DE2A1A6BC29800DE52F9 /* default.css */,
 				C7663EBC1A5524F10030FAAF /* AppDelegate.swift */,
 				C73983A61A552A2F00C1E215 /* MainViewController.swift */,
 				FF37DE1E1A6B467F00DE52F9 /* Markdown.swift */,
@@ -272,6 +275,7 @@
 				C7663EC51A5524F20030FAAF /* Main.storyboard in Resources */,
 				C7663ECA1A5524F20030FAAF /* LaunchScreen.xib in Resources */,
 				C7663EC71A5524F20030FAAF /* Images.xcassets in Resources */,
+				FF37DE2B1A6BC29800DE52F9 /* default.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

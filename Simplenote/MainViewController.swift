@@ -96,6 +96,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                         note!.modifydate = attr.modifydate
                         note!.version = attr.version
                         note!.isdeleted = (attr.deleted == 1)
+                        note!.markdown = attr.markdown
                         note!.content = content
                         self.database.saveContext()
                     }

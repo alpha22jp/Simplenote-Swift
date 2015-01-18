@@ -15,6 +15,7 @@ class Note: NSManagedObject {
     @NSManaged var modifydate: NSTimeInterval
     @NSManaged var version: Int32
     @NSManaged var isdeleted: Bool
+    @NSManaged var markdown: Bool
 }
 
 final class NoteDatabase {

@@ -8,10 +8,11 @@
 
 import UIKit
 
-class NoteViewController: UIViewController {
+class NoteViewController: UIViewController, UIWebViewDelegate {
 
-    @IBOutlet weak var textview: UITextView!
-    var note: Note?
+    var note: Note!
+    let webView = UIWebView()
+    let textView = UITextView()
 
     func dismissViewController() {
         navigationController?.popViewControllerAnimated(true)
@@ -21,7 +22,22 @@ class NoteViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        textview.text = note!.content
+        var view: UIView!
+
+        if note.markdown {
+            var markdown = Markdown()
+            let text = markdown.transform(note.content)
+            webView.delegate = self
+            webView.loadHTMLString(text, baseURL: nil)
+            view = webView
+        } else {
+            textView.text = note.content
+            textView.editable = false
+            view = textView
+        }
+
+        view.frame = self.view.bounds
+        self.view.addSubview(view)
     }
 
     override func didReceiveMemoryWarning() {

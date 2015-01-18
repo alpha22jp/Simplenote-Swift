@@ -5,10 +5,11 @@
         <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="isdeleted" optional="YES" attributeType="Boolean" defaultValueString="0" syncable="YES"/>
         <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="markdown" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="modifydate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="version" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Note" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="Note" positionX="-63" positionY="-18" width="128" height="150"/>
     </elements>
 </model>

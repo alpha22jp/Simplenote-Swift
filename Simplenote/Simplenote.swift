@@ -21,6 +21,7 @@ final class Simplenote {
         var modifydate: NSTimeInterval
         var version: Int32
         var deleted: Int32
+        var markdown: Bool
     }
 
     enum Result: String {
@@ -104,6 +105,20 @@ final class Simplenote {
         }
     }
 
+    private func makeNoteAttributes(data: JSON) -> NoteAttributes {
+        let systemtags = data["systemtags"]
+        var markdown = false
+        for i in 0 ..< systemtags.count {
+            if systemtags[i].stringValue == "markdown" { markdown = true }
+        }
+        return NoteAttributes(key: data["key"].stringValue,
+                              createdate: data["createdate"].doubleValue,
+                              modifydate: data["modifydate"].doubleValue,
+                              version: data["version"].int32Value,
+                              deleted: data["deleted"].int32Value,
+                              markdown: markdown)
+    }
+
     func getIndex(completion: ((Result, [NoteAttributes]!)->Void)!) {
         getToken { (result, token) in
             if !result.success() {
@@ -129,11 +144,7 @@ final class Simplenote {
                 let data = json["data"]
                 var noteAttrList: [NoteAttributes] = []
                 for i in 0 ..< count {
-                    let attr = NoteAttributes(key: data[i]["key"].stringValue,
-                                              createdate: data[i]["createdate"].doubleValue,
-                                              modifydate: data[i]["modifydate"].doubleValue,
-                                              version: data[i]["version"].int32Value,
-                                              deleted: data[i]["deleted"].int32Value)
+                    let attr = self.makeNoteAttributes(data[i])
                     noteAttrList.append(attr)
                 }
                 completion?(Result.Success, noteAttrList)
@@ -162,11 +173,7 @@ final class Simplenote {
                     return
                 }
                 println("Note: \(json)")
-                let attr = NoteAttributes(key: json["key"].stringValue,
-                                          createdate: json["createdate"].doubleValue,
-                                          modifydate: json["modifydate"].doubleValue,
-                                          version: json["version"].int32Value,
-                                          deleted: json["deleted"].int32Value)
+                let attr = self.makeNoteAttributes(json)
                 let content = json["content"].stringValue
                 completion?(Result.Success, attr, content)
             }

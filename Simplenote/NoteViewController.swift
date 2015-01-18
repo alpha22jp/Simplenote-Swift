@@ -45,6 +45,14 @@ class NoteViewController: UIViewController, UIWebViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func webView(webView: UIWebView!, shouldStartLoadWithRequest request: NSURLRequest!,
+                 navigationType: UIWebViewNavigationType) -> Bool {
+        if navigationType == UIWebViewNavigationType.LinkClicked {
+            UIApplication.sharedApplication().openURL(request.URL)
+            return false
+        }
+        return true
+    }
 
     /*
     // MARK: - Navigation

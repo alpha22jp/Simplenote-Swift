@@ -8,6 +8,7 @@
 
 import CoreData
 
+// MARK: - ノート情報のクラス (CoreDataのNote Entityに紐付けられている)
 class Note: NSManagedObject {
     @NSManaged var key: String
     @NSManaged var content: String
@@ -18,6 +19,7 @@ class Note: NSManagedObject {
     @NSManaged var markdown: Bool
 }
 
+// MARK: - ノート情報のデータベースを管理するクラス
 final class NoteDatabase {
 
     class var sharedInstance: NoteDatabase {
@@ -91,18 +93,23 @@ final class NoteDatabase {
         }
     }
 
+    // MARK: - Note Database operation
+
+    // MARK: Note Entityに対するNSFetchRequestを返す
     private func getFetchRequest() -> NSFetchRequest {
         let req = NSFetchRequest(entityName: "Note")
         req.returnsObjectsAsFaults = false
         return req
     }
 
+    // MARK: 与えられたNSFetchRequestで検索して結果をNoteの配列で返す
     private func executeFetch(req: NSFetchRequest) -> [Note] {
         let results = managedObjectContext?.executeFetchRequest(req, error: nil)
         let notes = results as? [Note]
         return (notes ?? [])
     }
 
+    // MARK: 与えられた条件に対応するNSFetchedResultsControllerを返す
     func getFetchedResultsController(sort: NSSortDescriptor, predicate: NSPredicate!, delegate: NSFetchedResultsControllerDelegate) -> NSFetchedResultsController {
         let req = getFetchRequest()
         req.sortDescriptors = [sort]
@@ -112,12 +119,14 @@ final class NoteDatabase {
         return controller
     }
 
+    // MARK: ノートを新規作成して作成したノートを返す
     func createNote(key: String) -> Note {
         var note = NSEntityDescription.insertNewObjectForEntityForName("Note", inManagedObjectContext: managedObjectContext!) as Note
         note.key = key
         return note
     }
 
+    // MARK: 与えられたキーに一致するノートを返す
     func searchNote(key: String) -> Note? {
         let req = getFetchRequest()
         req.predicate = NSPredicate(format: "%K = %@", "key", key)
@@ -125,11 +134,13 @@ final class NoteDatabase {
         return notes.count > 0 ? notes[0] : nil
     }
 
+    // MARK: 指定されたノートを削除する
     func deleteNote(note: Note) {
         managedObjectContext?.deleteObject(note)
         saveContext()
     }
 
+    // MARK: キーが一致するノートを削除する
     func deleteNoteByKey(key: String) {
         let note = searchNote(key)
         if let _note = note {
@@ -137,6 +148,7 @@ final class NoteDatabase {
         }
     }
 
+    // MARK: すべてのノートを削除する
     func deleteAllNotes() {
         let notes = executeFetch(getFetchRequest())
         for note in notes {
@@ -145,6 +157,7 @@ final class NoteDatabase {
         saveContext()
     }
 
+    // MARK: データベースが空かどうかを返す
     func isEmpty() -> Bool {
         let notes = executeFetch(getFetchRequest())
         return (notes.count == 0)

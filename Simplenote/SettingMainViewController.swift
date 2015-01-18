@@ -1,6 +1,6 @@
 //
 //  SettingMainViewController.swift
-//  Simplenote
+//  View controller for setting main screen
 //
 //  Created by alpha22jp on 2015/01/10.
 //  Copyright (c) 2015 alpha22jp@gmail.com. All rights reserved.
@@ -8,36 +8,30 @@
 
 import UIKit
 
+// MARK: - 設定のメイン画面を管理するクラス
 class SettingMainViewController: UITableViewController {
 
     let settings = Settings.sharedInstance
     let sortItems = ["Modify Date", "Create Date"]
     let orderItems = ["Newest First", "Oldest First"]
 
+    // MARK: - Storyboard connection
+
+    // MARK: Doneボタンがタップされたときに呼ばれる
     @IBAction func didDoneButtonTap(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
+    // MARK: - UIViewController
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 44
-    }
+    // MARK: - Table view data source
 
+    // MARK: 各セルの内容を設定する
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
         switch (indexPath.section, indexPath.row) {
@@ -53,20 +47,20 @@ class SettingMainViewController: UITableViewController {
 
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
         println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
-        // Navigate to SettingDetail (show (e.g. push))
         if segue.identifier == "sortByDetail" {
+            // Navigate to SettingDetailView (show (e.g. push))
             let controller = segue.destinationViewController as SettingDetailViewController
             controller.setting = settings.sort
             controller.items = sortItems
         } else if segue.identifier == "orderDetail" {
+            // Navigate to SettingDetailView (show (e.g. push))
             let controller = segue.destinationViewController as SettingDetailViewController
             controller.setting = settings.order
             controller.items = orderItems
+        } else if segue.identifier == "setAccount" {
+            // Navigate to SettingAccountView (present modally)
         }
     }
 

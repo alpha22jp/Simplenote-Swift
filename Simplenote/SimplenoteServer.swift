@@ -10,26 +10,29 @@ import Alamofire
 import SwiftyJSON
 import AlamofireSwiftyJSON
 
+// MARK: Simplenoteサーバーへのアクセスを管理するクラス
 final class SimplenoteServer {
-    var token: String!
-    var email: String!
-    var password: String!
+    var token: String! // トークン
+    var email: String! // E-mailアドレス
+    var password: String! // パスワード
 
+    // MARK: ノートの属性情報
     struct NoteAttributes {
-        var key: String
-        var createdate: NSTimeInterval
-        var modifydate: NSTimeInterval
-        var version: Int32
-        var deleted: Int32
-        var markdown: Bool
+        var key: String // キー (ノートの固有ID)
+        var createdate: NSTimeInterval // 作成日時
+        var modifydate: NSTimeInterval // 最終変更日時
+        var version: Int32 // バージョン
+        var deleted: Int32 // 削除済みフラグ
+        var markdown: Bool // マークダウン表示モードフラグ
     }
 
+    // MARK: サーバーの応答結果
     enum Result: String {
-        case Success = "Success"
-        case NoAccountInformation = "No Account Information"
-        case ServerConnectionError = "Server Connection Error"
-        case UserAuthenticationError = "User Authentication Error"
-        case UnknownError = "Unknown Error"
+        case Success = "Success" // 成功
+        case NoAccountInformation = "No Account Information" // アカウント情報なし
+        case ServerConnectionError = "Server Connection Error" // サーバー接続エラー
+        case UserAuthenticationError = "User Authentication Error" // 認証エラー
+        case UnknownError = "Unknown Error" // その他の不明なエラー
 
         func success() -> Bool { return (self == Success) }
     }
@@ -42,6 +45,7 @@ final class SimplenoteServer {
     }
     private init(){}
 
+    // MARK: サーバアクセス時に必要なアカウント情報をセットする
     func setAccountInfo(email: String, password: String){
         println(__FUNCTION__, "email: \(email) password: \(password)")
         self.email = email
@@ -49,6 +53,7 @@ final class SimplenoteServer {
         self.token = nil // アカウント情報が変更されたらトークンをリセット
     }
 
+    // MARK: HTTPステータスコードをResultに変換する
     private func statusCodeToResult(statusCode: Int) -> Result {
         // ステータスコードに応じてresultを設定
         switch statusCode {
@@ -63,6 +68,7 @@ final class SimplenoteServer {
         }
     }
 
+    // MARK: トークンをサーバーから取得する
     private func getToken(completion: ((Result, String?)->Void)!) {
         // トークンを取得済みの場合は、サーバーから取得しないで再利用する
         // TODO: トークンがexpireしていた場合の対応が必要
@@ -105,6 +111,7 @@ final class SimplenoteServer {
         }
     }
 
+    // MARK: 応答のJSONデータからノート属性情報を生成する
     private func makeNoteAttributes(data: JSON) -> NoteAttributes {
         let systemtags = data["systemtags"]
         var markdown = false
@@ -119,6 +126,7 @@ final class SimplenoteServer {
                               markdown: markdown)
     }
 
+    // MARK: インデックス (全ノートの属性情報) をサーバーから取得する
     func getIndex(completion: ((Result, [NoteAttributes]!)->Void)!) {
         getToken { (result, token) in
             if !result.success() {
@@ -152,6 +160,7 @@ final class SimplenoteServer {
         }
     }
 
+    // MARK: 各ノートの本体 (属性情報付き) をサーバーから取得する
     func getNote(key: String, completion: ((Result, NoteAttributes!, String!)->Void)!) {
         getToken { (result, token) in
             if !result.success() {

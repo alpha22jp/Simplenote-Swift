@@ -9,60 +9,53 @@
 import UIKit
 import CoreData
 
+// MARK: - メインのノート一覧画面を管理するクラス
 class MainViewController: UITableViewController, NSFetchedResultsControllerDelegate {
-
-    @IBAction func didRefreshButtonTap(sender: AnyObject) {
-        syncWithServer()
-    }
 
     let settings = Settings.sharedInstance
     let simplenote = SimplenoteServer.sharedInstance
     let database = NoteDatabase.sharedInstance
     var fetchedResultsController: NSFetchedResultsController!
 
+    // MARK: - Storyboard connection
+
+    @IBAction func didRefreshButtonTap(sender: AnyObject) {
+        syncWithServer()
+    }
+
+    // MARK: - UIViewController
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-
+        // SimplenoteServerにアカウント情報を設定
         let email = settings.email.get()
         let password = settings.password.get()
         simplenote.setAccountInfo(email, password: password)
 
+        // デフォルト状態の検索結果をセット
         fetchedResultsController = getDefaultFetchedResultsController()
         fetchedResultsController.performFetch(nil)
 
+        // リフレッシュコントロールを追加
         let refresh = UIRefreshControl()
         refresh.attributedTitle = NSAttributedString(string: "Loading...")
         refresh.addTarget(self, action: "syncWithServer", forControlEvents:.ValueChanged)
         self.refreshControl = refresh
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 
+        // 設定の変更を反映するために必要
         fetchedResultsController = getDefaultFetchedResultsController()
         fetchedResultsController.performFetch(nil)
         tableView.reloadData()
     }
 
-    private func getDefaultFetchedResultsController() -> NSFetchedResultsController {
-        let key = (settings.sort.get() == 0 ? "modifydate" : "createdate")
-        let ascending = (settings.order.get() == 1)
-        let sort = NSSortDescriptor(key: key, ascending: ascending)
-        let predicate = NSPredicate(format: "%K = FALSE", "isdeleted")
-        return database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
-    }
+    // MARK: - Simplenote server access
 
+    // MARK: エラーを通知するアラート (OKボタンのみ) を表示する
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
@@ -70,8 +63,10 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
+    // MARK: データベースに保存している全ノートの情報をサーバーと同期する
     private func syncWithServer() {
         println(__FUNCTION__, "Start syncing cached note data with server...")
+        // 全ノートの属性情報を取得
         simplenote.getIndex { (result, noteAttrList) in
             if !result.success() {
                 println(__FUNCTION__, "result = \(result.rawValue)")
@@ -82,16 +77,19 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             for attr in noteAttrList {
                 var note: Note! = self.database.searchNote(attr.key)
                 println(__FUNCTION__, "Version check, local:\(note?.version), remote:\(attr.version), key:\(note?.key)")
+                // サーバーの方がバージョンが新しいか、ローカルに存在しないときだけ更新
                 if attr.version > note?.version {
+                    // ノートの本体を取得
                     self.simplenote.getNote(attr.key) { (result, attr, content) in
                         if !result.success() {
-                            // TODO: ここでもエラー通知が必要か？
+                            // TODO: ノート本体の取得に失敗、ここでもエラー通知が必要か？
                             return
                         }
                         if note == nil {
                             println(__FUNCTION__, "Creating new note in DB...")
                             note = self.database.createNote(attr.key)
                         }
+                        // データベースのノート情報を更新
                         note.createdate = attr.createdate
                         note.modifydate = attr.modifydate
                         note.version = attr.version
@@ -106,24 +104,37 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         }
     }
 
-    // MARK: - Delegated functions for NSFetchedResultsController
+    // MARK: - NSFetchedResultsController
 
+    // MARK: 現在の設定に従った検索条件 (NSFetchedResultsController) を取得する
+    private func getDefaultFetchedResultsController() -> NSFetchedResultsController {
+        let key = (settings.sort.get() == 0 ? "modifydate" : "createdate")
+        let ascending = (settings.order.get() == 1)
+        let sort = NSSortDescriptor(key: key, ascending: ascending)
+        let predicate = NSPredicate(format: "%K = FALSE", "isdeleted")
+        return database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
+    }
+
+    // MARK: コンテンツ変更時に呼ばれる
     func controllerDidChangeContent(controller: NSFetchedResultsController!) {
         tableView.reloadData()
     }
 
     // MARK: - Table view data source
 
+    // MARK: セクション数を返す
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // Return the number of sections.
         return fetchedResultsController.sections!.count
     }
 
+    // MARK: 各セクションの行数を返す
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
         return fetchedResultsController.sections![section].numberOfObjects
     }
 
+    // MARK: 各セルの内容を設定する
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         // Configure the cell...
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
@@ -139,47 +150,9 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         return cell
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    	
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
         println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
         if segue.identifier == "note" {
             // Navigate to NoteView (show (e.g. push))
@@ -196,24 +169,28 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
 }
 
+// MARK: - 検索バー付きのノート一覧画面を管理する拡張クラス
 class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdating {
 
     let searchController = UISearchController(searchResultsController: nil)
 
+    // MARK: - UIViewController
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // 検索バーの初期設定、delegateの設定、テーブルとの関連付けを行う
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = true // default
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
         self.tableView.tableHeaderView = searchController.searchBar
 
-        // これを設定しないと、検索状態から詳細画面に遷移した際に検索バーが残ってしまう。
+        // これを設定しないと、検索状態から詳細画面に遷移した際に検索バーが残ってしまう
         definesPresentationContext = true
     }
 
-    // MARK: UISearchResultsUpdating
+    // MARK: - UISearchResultsUpdating
 
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         println(__FUNCTION__, "Search text = \(searchController.searchBar.text)")

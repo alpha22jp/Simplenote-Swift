@@ -8,15 +8,14 @@
 
 import UIKit
 
+// MARK: - ノート表示画面を管理するクラス
 class NoteViewController: UIViewController, UIWebViewDelegate {
 
-    var note: Note!
+    var note: Note! // 表示する対象のノート (画面遷移時にセットされる)
     let webView = UIWebView()
     let textView = UITextView()
 
-    func dismissViewController() {
-        navigationController?.popViewControllerAnimated(true)
-    }
+    // MARK: - UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,32 +35,21 @@ class NoteViewController: UIViewController, UIWebViewDelegate {
             view = textView
         }
 
+        // ノートを表示するビュー (textView or webView) を追加
         view.frame = self.view.bounds
         self.view.addSubview(view)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+    // MARK: - UIWebViewDelegate
+
     func webView(webView: UIWebView!, shouldStartLoadWithRequest request: NSURLRequest!,
                  navigationType: UIWebViewNavigationType) -> Bool {
         if navigationType == UIWebViewNavigationType.LinkClicked {
+            // リンクのクリックはSafariで開く
             UIApplication.sharedApplication().openURL(request.URL)
             return false
         }
         return true
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

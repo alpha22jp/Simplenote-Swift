@@ -1,6 +1,6 @@
 //
 //  Settings.swift
-//  Simplenote
+//  Setting values control
 //
 //  Created by alpha22jp on 2015/01/15.
 //  Copyright (c) 2015 alpha22jp@gmail.com. All rights reserved.
@@ -8,6 +8,7 @@
 
 import Foundation
 
+// MARK: - 個々の設定値を保持するクラス
 class Setting<T> {
     let userDefaults = NSUserDefaults.standardUserDefaults()
     var key: String
@@ -22,6 +23,7 @@ class Setting<T> {
     func get() -> T { return userDefaults.objectForKey(key) as T }
 }
 
+// MARK: - 設定値を管理するクラス
 class Settings {
     let email = Setting<String>(key: "email", initialValue: "")
     let password = Setting<String>(key: "password", initialValue: "")

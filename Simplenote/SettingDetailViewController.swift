@@ -1,6 +1,6 @@
 //
 //  SettingDetailViewController.swift
-//  Simplenote
+//  View controller for setting detail screen
 //
 //  Created by alpha22jp on 2015/01/13.
 //  Copyright (c) 2015 alpha22jp@gmail.com. All rights reserved.
@@ -8,20 +8,13 @@
 
 import UIKit
 
+// MARK: - 設定の詳細画面 (選択項目の設定) を管理するクラス
 class SettingDetailViewController: UITableViewController {
 
-    var setting: Setting<Int>!
-    var items: [String]!
+    var setting: Setting<Int>! // 対象となる設定値 (画面遷移時にセットされる)
+    var items: [String]! // 選択項目のリスト (画面遷移時にセットされる)
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
+    // MARK: - UIViewController
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -30,13 +23,9 @@ class SettingDetailViewController: UITableViewController {
         self.tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: .None)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    // MARK: - Table view operation
 
-    // MARK: - Table view delegate
-
+    // MARK: セルが選択された時に呼ばれる
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         cell?.accessoryType = .Checkmark
@@ -44,6 +33,7 @@ class SettingDetailViewController: UITableViewController {
         setting.set(indexPath.row)
     }
 
+    // MARK: セルの選択が解除された時に呼ばれる
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         cell?.accessoryType = .None
@@ -51,18 +41,19 @@ class SettingDetailViewController: UITableViewController {
 
     // MARK: - Table view data source
 
+    // MARK: セクション数を返す
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
         // Return the number of sections.
         return 1
     }
 
+    // MARK: 各セクションの行数を返す
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
         // Return the number of rows in the section.
         return items.count
     }
 
+    // MARK: 各セルの内容を設定する
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
 
@@ -76,50 +67,5 @@ class SettingDetailViewController: UITableViewController {
 
         return cell
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

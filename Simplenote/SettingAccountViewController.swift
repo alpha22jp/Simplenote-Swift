@@ -11,7 +11,7 @@ import UIKit
 class SettingAccountViewController: UITableViewController {
 
     let settings = Settings.sharedInstance
-    let simplenote = Simplenote.sharedInstance
+    let simplenote = SimplenoteServer.sharedInstance
     let database = NoteDatabase.sharedInstance
 
     @IBOutlet weak var emailField: UITextField!

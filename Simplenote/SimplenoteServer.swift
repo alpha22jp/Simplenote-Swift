@@ -1,5 +1,5 @@
 //
-//  Simplenote.swift
+//  SimplenoteServer.swift
 //  Simplenote server access
 //
 //  Created by alpha22jp on 2015/01/01.
@@ -10,7 +10,7 @@ import Alamofire
 import SwiftyJSON
 import AlamofireSwiftyJSON
 
-final class Simplenote {
+final class SimplenoteServer {
     var token: String?
     var email: String?
     var password: String?
@@ -34,9 +34,9 @@ final class Simplenote {
         func success() -> Bool { return (self == Success) }
     }
 
-    class var sharedInstance: Simplenote {
+    class var sharedInstance: SimplenoteServer {
         struct Static {
-            static let instance = Simplenote()
+            static let instance = SimplenoteServer()
         }
         return Static.instance
     }

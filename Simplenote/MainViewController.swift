@@ -16,7 +16,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     }
 
     let settings = Settings.sharedInstance
-    let simplenote = Simplenote.sharedInstance
+    let simplenote = SimplenoteServer.sharedInstance
     let database = NoteDatabase.sharedInstance
     var fetchedResultsController: NSFetchedResultsController!
 

@@ -78,7 +78,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                 var note: Note! = self.database.searchNote(attr.key)
                 println(__FUNCTION__, "Version check, local:\(note?.version), remote:\(attr.version), key:\(note?.key)")
                 // サーバーの方がバージョンが新しいか、ローカルに存在しないときだけ更新
-                if attr.version > note?.version {
+                if note == nil || attr.version > note.version {
                     // ノートの本体を取得
                     self.simplenote.getNote(attr.key) { (result, attr, content) in
                         if !result.success() {

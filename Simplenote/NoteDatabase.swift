@@ -152,4 +152,14 @@ final class NoteDatabase {
             saveContext()
         }
     }
+
+    func isEmpty() -> Bool {
+        let req = getFetchRequest()
+        let results = managedObjectContext?.executeFetchRequest(req, error: nil)
+        if let notes = results as? [Note] {
+            return (notes.count == 0)
+        } else {
+            return true
+        }
+    }
 }

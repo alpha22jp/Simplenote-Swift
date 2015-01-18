@@ -27,12 +27,14 @@ class SettingAccountController: UITableViewController {
             return
         }
         if emailField.text != settings.email.get() {
-            showActionSheet("Confirmation", message: "Account changed. Are you sure to clear cached note data?") {
-                self.database.deleteAllNotes()
-                self.settings.email.set(self.emailField.text)
-                self.settings.password.set(self.passwordField.text)
-                self.simplenote.setAccountInfo(self.emailField.text, password: self.passwordField.text)
-                self.dismissViewControllerAnimated(true, completion: nil)
+            if database.isEmpty() {
+                resetAccount()
+                dismissViewControllerAnimated(true, completion: nil)
+            } else {
+                showActionSheet("Confirmation", message: "Account changed. Are you sure to clear cached note data?") {
+                    self.resetAccount()
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }
             }
         } else {
             if passwordField.text != settings.password.get() {
@@ -41,6 +43,13 @@ class SettingAccountController: UITableViewController {
             }
             dismissViewControllerAnimated(true, completion: nil)
         }
+    }
+
+    private func resetAccount() {
+        database.deleteAllNotes()
+        settings.email.set(emailField.text)
+        settings.password.set(passwordField.text)
+        simplenote.setAccountInfo(emailField.text, password: passwordField.text)
     }
 
     private func showAlert(title: String, message: String) {

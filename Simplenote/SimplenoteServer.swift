@@ -12,9 +12,9 @@ import AlamofireSwiftyJSON
 
 // MARK: Simplenoteサーバーへのアクセスを管理するクラス
 final class SimplenoteServer {
-    var token: String! // トークン
-    var email: String! = "" // E-mailアドレス
-    var password: String! = "" // パスワード
+    var token: String = "" // トークン
+    var email: String = "" // E-mailアドレス
+    var password: String = "" // パスワード
 
     // MARK: ノートの属性情報
     struct NoteAttributes {
@@ -50,7 +50,7 @@ final class SimplenoteServer {
         println(__FUNCTION__, "email: \(email) password: \(password)")
         self.email = email
         self.password = password
-        self.token = nil // アカウント情報が変更されたらトークンをリセット
+        self.token = "" // アカウント情報が変更されたらトークンをリセット
     }
 
     // MARK: HTTPステータスコードをResultに変換する
@@ -69,16 +69,16 @@ final class SimplenoteServer {
     }
 
     // MARK: トークンをサーバーから取得する
-    private func getToken(completion: ((Result, String?)->Void)!) {
+    private func getToken(completion: ((Result, String)->Void)!) {
         // トークンを取得済みの場合は、サーバーから取得しないで再利用する
         // TODO: トークンがexpireしていた場合の対応が必要
-        if self.token != nil {
+        if self.token != "" {
             completion?(Result.Success, self.token)
             return
         }
         // アカウント情報が設定されているかを確認
         if email == "" || password == "" {
-            completion?(Result.NoAccountInformation, nil)
+            completion?(Result.NoAccountInformation, "")
             return
         }
         // パラメータを生成する (URLエンコード＆base64エンコード)

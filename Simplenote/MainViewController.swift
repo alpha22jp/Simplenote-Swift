@@ -80,7 +80,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             }
             for attr in noteAttrList {
                 println("Search \(attr.key) in DB...")
-                var note: Note? = self.database.searchNote(attr.key)
+                var note: Note! = self.database.searchNote(attr.key)
                 println("Version check, local:\(note?.version), remote:\(attr.version)")
                 if attr.version > note?.version {
                     self.simplenote.getNote(attr.key) { (result, attr, content) in
@@ -92,12 +92,12 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                             println("Creating new note in DB...")
                             note = self.database.createNote(attr.key)
                         }
-                        note!.createdate = attr.createdate
-                        note!.modifydate = attr.modifydate
-                        note!.version = attr.version
-                        note!.isdeleted = (attr.deleted == 1)
-                        note!.markdown = attr.markdown
-                        note!.content = content
+                        note.createdate = attr.createdate
+                        note.modifydate = attr.modifydate
+                        note.version = attr.version
+                        note.isdeleted = (attr.deleted == 1)
+                        note.markdown = attr.markdown
+                        note.content = content
                         self.database.saveContext()
                     }
                 }

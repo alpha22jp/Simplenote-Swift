@@ -13,8 +13,8 @@ import AlamofireSwiftyJSON
 // MARK: Simplenoteサーバーへのアクセスを管理するクラス
 final class SimplenoteServer {
     var token: String! // トークン
-    var email: String! // E-mailアドレス
-    var password: String! // パスワード
+    var email: String! = "" // E-mailアドレス
+    var password: String! = "" // パスワード
 
     // MARK: ノートの属性情報
     struct NoteAttributes {
@@ -77,7 +77,7 @@ final class SimplenoteServer {
             return
         }
         // アカウント情報が設定されているかを確認
-        if email == nil || password == nil {
+        if email == "" || password == "" {
             completion?(Result.NoAccountInformation, nil)
             return
         }

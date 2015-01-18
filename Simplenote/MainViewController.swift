@@ -71,6 +71,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     }
 
     private func syncWithServer() {
+        println(__FUNCTION__, "Start syncing cached note data with server...")
         simplenote.getIndex { (result, noteAttrList) in
             if !result.success() {
                 println(__FUNCTION__, "result = \(result.rawValue)")
@@ -79,9 +80,8 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                 return
             }
             for attr in noteAttrList {
-                println("Search \(attr.key) in DB...")
                 var note: Note! = self.database.searchNote(attr.key)
-                println("Version check, local:\(note?.version), remote:\(attr.version)")
+                println(__FUNCTION__, "Version check, local:\(note?.version), remote:\(attr.version), key:\(note?.key)")
                 if attr.version > note?.version {
                     self.simplenote.getNote(attr.key) { (result, attr, content) in
                         if !result.success() {
@@ -89,7 +89,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                             return
                         }
                         if note == nil {
-                            println("Creating new note in DB...")
+                            println(__FUNCTION__, "Creating new note in DB...")
                             note = self.database.createNote(attr.key)
                         }
                         note.createdate = attr.createdate
@@ -180,7 +180,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
-        println("segue.identifier: \(segue.identifier)")
+        println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
         if segue.identifier == "note" {
             // Navigate to NoteView (show (e.g. push))
             let cell = sender as UITableViewCell
@@ -216,7 +216,7 @@ class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdati
     // MARK: UISearchResultsUpdating
 
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        println("Search text = \(searchController.searchBar.text)")
+        println(__FUNCTION__, "Search text = \(searchController.searchBar.text)")
         if searchController.searchBar.text == "" {
             fetchedResultsController = getDefaultFetchedResultsController()
         } else {

@@ -43,7 +43,7 @@ final class Simplenote {
     private init(){}
 
     func setAccountInfo(email: String, password: String){
-        println("email: \(email) password: \(password)")
+        println(__FUNCTION__, "email: \(email) password: \(password)")
         self.email = email
         self.password = password
         self.token = nil // アカウント情報が変更されたらトークンをリセット
@@ -86,7 +86,6 @@ final class Simplenote {
         Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
             (_, res, data, _) in
             println(__FUNCTION__, "Status Code: \(res?.statusCode)")
-            println("Data: \(data)")
             var statusCode = 0
             if let _res = res {
                 statusCode = _res.statusCode
@@ -94,6 +93,7 @@ final class Simplenote {
             var result = self.statusCodeToResult(statusCode)
             if result.success() {
                 result = Result.UnknownError
+                println(__FUNCTION__, "Token: \(data)")
                 if let _data = data {
                     if _data != "" {
                         result = Result.Success
@@ -140,7 +140,7 @@ final class Simplenote {
                     return
                 }
                 let count: Int = json["count"].intValue
-                println("Note count: \(count)")
+                println(__FUNCTION__, "Note count: \(count)")
                 let data = json["data"]
                 var noteAttrList: [NoteAttributes] = []
                 for i in 0 ..< count {
@@ -172,7 +172,7 @@ final class Simplenote {
                     completion?(result, nil, nil)
                     return
                 }
-                println("Note: \(json)")
+                println(__FUNCTION__, "Note: \(json)")
                 let attr = self.makeNoteAttributes(json)
                 let content = json["content"].stringValue
                 completion?(Result.Success, attr, content)

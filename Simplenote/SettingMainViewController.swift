@@ -57,7 +57,7 @@ class SettingMainViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        println("segue.identifier: \(segue.identifier)")
+        println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
         // Navigate to SettingDetail (show (e.g. push))
         if segue.identifier == "sortByDetail" {
             let controller = segue.destinationViewController as SettingDetailViewController

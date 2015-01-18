@@ -62,7 +62,7 @@
         <!--Setting Main View-->
         <scene sceneID="YZM-Os-CPK">
             <objects>
-                <tableViewController storyboardIdentifier="setting" title="Setting Main View" id="mnR-Ky-XJy" customClass="SettingViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="setting" title="Setting Main View" id="mnR-Ky-XJy" customClass="SettingMainViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="B6h-TZ-9xK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -166,7 +166,7 @@
         <!--Setting Detail View-->
         <scene sceneID="hdY-8a-c2S">
             <objects>
-                <tableViewController title="Setting Detail View" id="AFi-tR-LwD" customClass="SettingDetailController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Setting Detail View" id="AFi-tR-LwD" customClass="SettingDetailViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="gcK-8H-oSh">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -201,7 +201,7 @@
         <!--Setting Account View-->
         <scene sceneID="S6K-6c-ydg">
             <objects>
-                <tableViewController title="Setting Account View" id="jau-GJ-Yw7" customClass="SettingAccountController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Setting Account View" id="jau-GJ-Yw7" customClass="SettingAccountViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="DbO-sT-LOL">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

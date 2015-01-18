@@ -1,5 +1,5 @@
 //
-//  SettingDetailController.swift
+//  SettingDetailViewController.swift
 //  Simplenote
 //
 //  Created by alpha22jp on 2015/01/13.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingDetailController: UITableViewController {
+class SettingDetailViewController: UITableViewController {
 
     var setting: Setting<Int>!
     var items: [String]!

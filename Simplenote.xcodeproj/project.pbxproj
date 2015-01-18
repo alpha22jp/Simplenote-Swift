@@ -15,13 +15,13 @@
 		C7663EC71A5524F20030FAAF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7663EC61A5524F20030FAAF /* Images.xcassets */; };
 		C7663ECA1A5524F20030FAAF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7663EC81A5524F20030FAAF /* LaunchScreen.xib */; };
 		C7663ED61A5524F20030FAAF /* SimplenoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7663ED51A5524F20030FAAF /* SimplenoteTests.swift */; };
-		FF0451001A6025E900928F45 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0450FF1A6025E900928F45 /* SettingViewController.swift */; };
-		FF37DDFA1A6A34D700DE52F9 /* SettingAccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37DDF91A6A34D700DE52F9 /* SettingAccountController.swift */; };
+		FF0451001A6025E900928F45 /* SettingMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0450FF1A6025E900928F45 /* SettingMainViewController.swift */; };
+		FF37DDFA1A6A34D700DE52F9 /* SettingAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37DDF91A6A34D700DE52F9 /* SettingAccountViewController.swift */; };
 		FF37DE1F1A6B467F00DE52F9 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37DE1E1A6B467F00DE52F9 /* Markdown.swift */; };
 		FF8F2B2E1A5D6713007507B3 /* AlamofireSwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8F2B291A5D6636007507B3 /* AlamofireSwiftyJSON.framework */; };
 		FF8F2B301A5D68AF007507B3 /* NoteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */; };
 		FFC9D33B1A5D842E002CD2FC /* Simplenote.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC9D33A1A5D842E002CD2FC /* Simplenote.swift */; };
-		FFD6121F1A6567F1006FA0EC /* SettingDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6121E1A6567F1006FA0EC /* SettingDetailController.swift */; };
+		FFD6121F1A6567F1006FA0EC /* SettingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6121E1A6567F1006FA0EC /* SettingDetailViewController.swift */; };
 		FFD612231A680BAC006FA0EC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD612221A680BAC006FA0EC /* Settings.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,13 +62,13 @@
 		C7663ECF1A5524F20030FAAF /* SimplenoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimplenoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7663ED41A5524F20030FAAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C7663ED51A5524F20030FAAF /* SimplenoteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplenoteTests.swift; sourceTree = "<group>"; };
-		FF0450FF1A6025E900928F45 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
-		FF37DDF91A6A34D700DE52F9 /* SettingAccountController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingAccountController.swift; sourceTree = "<group>"; };
+		FF0450FF1A6025E900928F45 /* SettingMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingMainViewController.swift; sourceTree = "<group>"; };
+		FF37DDF91A6A34D700DE52F9 /* SettingAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingAccountViewController.swift; sourceTree = "<group>"; };
 		FF37DE1E1A6B467F00DE52F9 /* Markdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Markdown.swift; path = Markingbird/Markingbird/Markdown.swift; sourceTree = SOURCE_ROOT; };
 		FF8F2B211A5D6635007507B3 /* Alamofire-SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Alamofire-SwiftyJSON.xcodeproj"; path = "Alamofire-SwiftyJSON/Alamofire-SwiftyJSON.xcodeproj"; sourceTree = "<group>"; };
 		FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteDatabase.swift; sourceTree = "<group>"; };
 		FFC9D33A1A5D842E002CD2FC /* Simplenote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Simplenote.swift; sourceTree = "<group>"; };
-		FFD6121E1A6567F1006FA0EC /* SettingDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingDetailController.swift; sourceTree = "<group>"; };
+		FFD6121E1A6567F1006FA0EC /* SettingDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingDetailViewController.swift; sourceTree = "<group>"; };
 		FFD612221A680BAC006FA0EC /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,15 +113,15 @@
 		C7663EB91A5524F10030FAAF /* Simplenote */ = {
 			isa = PBXGroup;
 			children = (
-				FF37DE1E1A6B467F00DE52F9 /* Markdown.swift */,
 				C7663EBC1A5524F10030FAAF /* AppDelegate.swift */,
 				C73983A61A552A2F00C1E215 /* MainViewController.swift */,
+				FF37DE1E1A6B467F00DE52F9 /* Markdown.swift */,
 				FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */,
 				C73983A81A5574DB00C1E215 /* NoteViewController.swift */,
-				FF37DDF91A6A34D700DE52F9 /* SettingAccountController.swift */,
-				FFD6121E1A6567F1006FA0EC /* SettingDetailController.swift */,
+				FF37DDF91A6A34D700DE52F9 /* SettingAccountViewController.swift */,
+				FFD6121E1A6567F1006FA0EC /* SettingDetailViewController.swift */,
+				FF0450FF1A6025E900928F45 /* SettingMainViewController.swift */,
 				FFD612221A680BAC006FA0EC /* Settings.swift */,
-				FF0450FF1A6025E900928F45 /* SettingViewController.swift */,
 				FFC9D33A1A5D842E002CD2FC /* Simplenote.swift */,
 				C7663EC61A5524F20030FAAF /* Images.xcassets */,
 				C7663EC81A5524F20030FAAF /* LaunchScreen.xib */,
@@ -291,13 +291,13 @@
 			files = (
 				FF8F2B301A5D68AF007507B3 /* NoteDatabase.swift in Sources */,
 				C7663EBD1A5524F10030FAAF /* AppDelegate.swift in Sources */,
-				FF37DDFA1A6A34D700DE52F9 /* SettingAccountController.swift in Sources */,
+				FF37DDFA1A6A34D700DE52F9 /* SettingAccountViewController.swift in Sources */,
 				C7663EC01A5524F10030FAAF /* Simplenote.xcdatamodeld in Sources */,
 				C73983A91A5574DB00C1E215 /* NoteViewController.swift in Sources */,
 				C73983A71A552A2F00C1E215 /* MainViewController.swift in Sources */,
-				FFD6121F1A6567F1006FA0EC /* SettingDetailController.swift in Sources */,
+				FFD6121F1A6567F1006FA0EC /* SettingDetailViewController.swift in Sources */,
 				FFD612231A680BAC006FA0EC /* Settings.swift in Sources */,
-				FF0451001A6025E900928F45 /* SettingViewController.swift in Sources */,
+				FF0451001A6025E900928F45 /* SettingMainViewController.swift in Sources */,
 				FFC9D33B1A5D842E002CD2FC /* Simplenote.swift in Sources */,
 				FF37DE1F1A6B467F00DE52F9 /* Markdown.swift in Sources */,
 			);

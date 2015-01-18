@@ -1,5 +1,5 @@
 //
-//  SettingAccountController.swift
+//  SettingAccountViewController.swift
 //  Simplenote
 //
 //  Created by alpha22jp on 2015/01/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingAccountController: UITableViewController {
+class SettingAccountViewController: UITableViewController {
 
     let settings = Settings.sharedInstance
     let simplenote = Simplenote.sharedInstance

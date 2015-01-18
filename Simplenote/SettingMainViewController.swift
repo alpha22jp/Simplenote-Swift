@@ -1,5 +1,5 @@
 //
-//  SettingViewController.swift
+//  SettingMainViewController.swift
 //  Simplenote
 //
 //  Created by alpha22jp on 2015/01/10.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingViewController: UITableViewController {
+class SettingMainViewController: UITableViewController {
 
     let settings = Settings.sharedInstance
     let sortItems = ["Modify Date", "Create Date"]
@@ -60,11 +60,11 @@ class SettingViewController: UITableViewController {
         println("segue.identifier: \(segue.identifier)")
         // Navigate to SettingDetail (show (e.g. push))
         if segue.identifier == "sortByDetail" {
-            let controller = segue.destinationViewController as SettingDetailController
+            let controller = segue.destinationViewController as SettingDetailViewController
             controller.setting = settings.sort
             controller.items = sortItems
         } else if segue.identifier == "orderDetail" {
-            let controller = segue.destinationViewController as SettingDetailController
+            let controller = segue.destinationViewController as SettingDetailViewController
             controller.setting = settings.order
             controller.items = orderItems
         }

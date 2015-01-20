@@ -1,0 +1,2 @@
+pod 'Alamofire'
+pod 'SwiftyJSON'

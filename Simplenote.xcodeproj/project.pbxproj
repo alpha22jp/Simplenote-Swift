@@ -19,7 +19,6 @@
 		FF37DDFA1A6A34D700DE52F9 /* SettingAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37DDF91A6A34D700DE52F9 /* SettingAccountViewController.swift */; };
 		FF37DE1F1A6B467F00DE52F9 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF37DE1E1A6B467F00DE52F9 /* Markdown.swift */; };
 		FF37DE2B1A6BC29800DE52F9 /* default.css in Resources */ = {isa = PBXBuildFile; fileRef = FF37DE2A1A6BC29800DE52F9 /* default.css */; };
-		FF8F2B2E1A5D6713007507B3 /* AlamofireSwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8F2B291A5D6636007507B3 /* AlamofireSwiftyJSON.framework */; };
 		FF8F2B301A5D68AF007507B3 /* NoteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */; };
 		FFC9D33B1A5D842E002CD2FC /* SimplenoteServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC9D33A1A5D842E002CD2FC /* SimplenoteServer.swift */; };
 		FFD6121F1A6567F1006FA0EC /* SettingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD6121E1A6567F1006FA0EC /* SettingDetailViewController.swift */; };
@@ -33,20 +32,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = C7663EB61A5524F10030FAAF;
 			remoteInfo = Simplenote;
-		};
-		FF8F2B281A5D6636007507B3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF8F2B211A5D6635007507B3 /* Alamofire-SwiftyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A8AFB70F19D1401D0070765E;
-			remoteInfo = AlamofireSwiftyJSON;
-		};
-		FF8F2B2A1A5D6636007507B3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FF8F2B211A5D6635007507B3 /* Alamofire-SwiftyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A8AFB71A19D1401D0070765E;
-			remoteInfo = AlamofireSwiftyJSONTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -67,7 +52,6 @@
 		FF37DDF91A6A34D700DE52F9 /* SettingAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingAccountViewController.swift; sourceTree = "<group>"; };
 		FF37DE1E1A6B467F00DE52F9 /* Markdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Markdown.swift; path = Markingbird/Markingbird/Markdown.swift; sourceTree = SOURCE_ROOT; };
 		FF37DE2A1A6BC29800DE52F9 /* default.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = default.css; sourceTree = "<group>"; };
-		FF8F2B211A5D6635007507B3 /* Alamofire-SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Alamofire-SwiftyJSON.xcodeproj"; path = "Alamofire-SwiftyJSON/Alamofire-SwiftyJSON.xcodeproj"; sourceTree = "<group>"; };
 		FF8F2B2F1A5D68AF007507B3 /* NoteDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteDatabase.swift; sourceTree = "<group>"; };
 		FFC9D33A1A5D842E002CD2FC /* SimplenoteServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplenoteServer.swift; sourceTree = "<group>"; };
 		FFD6121E1A6567F1006FA0EC /* SettingDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingDetailViewController.swift; sourceTree = "<group>"; };
@@ -79,7 +63,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF8F2B2E1A5D6713007507B3 /* AlamofireSwiftyJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +79,6 @@
 		C7663EAE1A5524F10030FAAF = {
 			isa = PBXGroup;
 			children = (
-				FF8F2B211A5D6635007507B3 /* Alamofire-SwiftyJSON.xcodeproj */,
 				C7663EB91A5524F10030FAAF /* Simplenote */,
 				C7663ED21A5524F20030FAAF /* SimplenoteTests */,
 				C7663EB81A5524F10030FAAF /* Products */,
@@ -158,15 +140,6 @@
 				C7663ED41A5524F20030FAAF /* Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		FF8F2B221A5D6635007507B3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FF8F2B291A5D6636007507B3 /* AlamofireSwiftyJSON.framework */,
-				FF8F2B2B1A5D6636007507B3 /* AlamofireSwiftyJSONTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,12 +209,6 @@
 			mainGroup = C7663EAE1A5524F10030FAAF;
 			productRefGroup = C7663EB81A5524F10030FAAF /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = FF8F2B221A5D6635007507B3 /* Products */;
-					ProjectRef = FF8F2B211A5D6635007507B3 /* Alamofire-SwiftyJSON.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				C7663EB61A5524F10030FAAF /* Simplenote */,
@@ -249,23 +216,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		FF8F2B291A5D6636007507B3 /* AlamofireSwiftyJSON.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AlamofireSwiftyJSON.framework;
-			remoteRef = FF8F2B281A5D6636007507B3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FF8F2B2B1A5D6636007507B3 /* AlamofireSwiftyJSONTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = AlamofireSwiftyJSONTests.xctest;
-			remoteRef = FF8F2B2A1A5D6636007507B3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C7663EB51A5524F10030FAAF /* Resources */ = {
@@ -430,7 +380,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Alamofire-SwiftyJSON/SwiftyJSON/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = Simplenote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -444,7 +393,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Alamofire-SwiftyJSON/SwiftyJSON/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = Simplenote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

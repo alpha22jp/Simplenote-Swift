@@ -8,7 +8,6 @@
 
 import Alamofire
 import SwiftyJSON
-import AlamofireSwiftyJSON
 
 // MARK: Simplenoteサーバーへのアクセスを管理するクラス
 final class SimplenoteServer {
@@ -135,24 +134,25 @@ final class SimplenoteServer {
             }
             let url = "http://simple-note.appspot.com/api2/index"
             let params = [ "auth": token, "email": self.email ]
-            Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
-                (_, res, json, _) in
+            Alamofire.request(.GET, url, parameters: params).responseJSON {
+                (_, res, data, _) in
                 println(__FUNCTION__, "Status Code: \(res?.statusCode)")
                 var statusCode = 0
                 if let _res = res {
                     statusCode = _res.statusCode
                 }
                 var result = self.statusCodeToResult(statusCode)
+                if data == nil { result = .UnknownError }
                 if !result.success() {
                     completion?(result, nil)
                     return
                 }
+                let json = JSON(data!)
                 let count: Int = json["count"].intValue
                 println(__FUNCTION__, "Note count: \(count)")
-                let data = json["data"]
                 var noteAttrList: [NoteAttributes] = []
                 for i in 0 ..< count {
-                    let attr = self.makeNoteAttributes(data[i])
+                    let attr = self.makeNoteAttributes(json["data"][i])
                     noteAttrList.append(attr)
                 }
                 completion?(Result.Success, noteAttrList)
@@ -169,18 +169,20 @@ final class SimplenoteServer {
             }
             let url = "https://simple-note.appspot.com/api2/data/" + key
             let params = [ "auth": token, "email": self.email ]
-            Alamofire.request(.GET, url, parameters: params).responseSwiftyJSON {
-                (_, res, json, _) in
+            Alamofire.request(.GET, url, parameters: params).responseJSON {
+                (_, res, data, _) in
                 println(__FUNCTION__, "Status Code: \(res?.statusCode)")
                 var statusCode = 0
                 if let _res = res {
                     statusCode = _res.statusCode
                 }
                 var result = self.statusCodeToResult(statusCode)
+                if data == nil { result = .UnknownError }
                 if !result.success() {
                     completion?(result, nil, nil)
                     return
                 }
+                let json = JSON(data!)
                 println(__FUNCTION__, "Note: \(json)")
                 let attr = self.makeNoteAttributes(json)
                 let content = json["content"].stringValue

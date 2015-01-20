@@ -91,22 +91,18 @@ final class SimplenoteServer {
         Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
             (_, res, data, _) in
             println(__FUNCTION__, "Status Code: \(res?.statusCode)")
-            var statusCode = 0
-            if let _res = res {
-                statusCode = _res.statusCode
-            }
+            var statusCode = (res == nil ? 0 : res!.statusCode)
             var result = self.statusCodeToResult(statusCode)
             if result.success() {
-                result = .UnknownError
                 println(__FUNCTION__, "Token: \(data)")
-                if let _data = data {
-                    if _data != "" {
-                        result = .Success
-                        self.token = _data
-                    }
+                if data != nil && data! != "" {
+                    result = .Success
+                    self.token = data!
+                } else {
+                    result = .UnknownError
                 }
             }
-            completion?(result, self.token ?? "")
+            completion?(result, self.token)
         }
     }
 
@@ -137,10 +133,7 @@ final class SimplenoteServer {
             Alamofire.request(.GET, url, parameters: params).responseJSON {
                 (_, res, data, _) in
                 println(__FUNCTION__, "Status Code: \(res?.statusCode)")
-                var statusCode = 0
-                if let _res = res {
-                    statusCode = _res.statusCode
-                }
+                var statusCode = (res == nil ? 0 : res!.statusCode)
                 var result = self.statusCodeToResult(statusCode)
                 if data == nil { result = .UnknownError }
                 if !result.success() {
@@ -172,10 +165,7 @@ final class SimplenoteServer {
             Alamofire.request(.GET, url, parameters: params).responseJSON {
                 (_, res, data, _) in
                 println(__FUNCTION__, "Status Code: \(res?.statusCode)")
-                var statusCode = 0
-                if let _res = res {
-                    statusCode = _res.statusCode
-                }
+                var statusCode = (res == nil ? 0 : res!.statusCode)
                 var result = self.statusCodeToResult(statusCode)
                 if data == nil { result = .UnknownError }
                 if !result.success() {

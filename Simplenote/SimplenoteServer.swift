@@ -57,13 +57,13 @@ final class SimplenoteServer {
         // ステータスコードに応じてresultを設定
         switch statusCode {
         case 200:
-            return Result.Success
+            return .Success
         case 400:
             // ユーザー認証失敗の場合は400が返る
-            return Result.UserAuthenticationError
+            return .UserAuthenticationError
         default:
             // それ以外は一律サーバー接続エラーとする
-            return Result.ServerConnectionError
+            return .ServerConnectionError
         }
     }
 
@@ -72,12 +72,12 @@ final class SimplenoteServer {
         // トークンを取得済みの場合は、サーバーから取得しないで再利用する
         // TODO: トークンがexpireしていた場合の対応が必要
         if self.token != "" {
-            completion?(Result.Success, self.token)
+            completion?(.Success, self.token)
             return
         }
         // アカウント情報が設定されているかを確認
         if email == "" || password == "" {
-            completion?(Result.NoAccountInformation, "")
+            completion?(.NoAccountInformation, "")
             return
         }
         // パラメータを生成する (URLエンコード＆base64エンコード)
@@ -97,11 +97,11 @@ final class SimplenoteServer {
             }
             var result = self.statusCodeToResult(statusCode)
             if result.success() {
-                result = Result.UnknownError
+                result = .UnknownError
                 println(__FUNCTION__, "Token: \(data)")
                 if let _data = data {
                     if _data != "" {
-                        result = Result.Success
+                        result = .Success
                         self.token = _data
                     }
                 }
@@ -155,7 +155,7 @@ final class SimplenoteServer {
                     let attr = self.makeNoteAttributes(json["data"][i])
                     noteAttrList.append(attr)
                 }
-                completion?(Result.Success, noteAttrList)
+                completion?(.Success, noteAttrList)
             }
         }
     }
@@ -186,7 +186,7 @@ final class SimplenoteServer {
                 println(__FUNCTION__, "Note: \(json)")
                 let attr = self.makeNoteAttributes(json)
                 let content = json["content"].stringValue
-                completion?(Result.Success, attr, content)
+                completion?(.Success, attr, content)
             }
         }
     }

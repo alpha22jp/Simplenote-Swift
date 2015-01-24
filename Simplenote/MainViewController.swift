@@ -193,10 +193,10 @@ class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdati
     // MARK: - UISearchResultsUpdating
 
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        println(__FUNCTION__, "Search text = \(searchController.searchBar.text)")
-        if searchController.searchBar.text == "" {
+        if searchController.searchBar.text.isEmpty {
             fetchedResultsController = getDefaultFetchedResultsController()
         } else {
+            println(__FUNCTION__, "Search text = \(searchController.searchBar.text)")
             let key = (settings.sort.get() == 0 ? "modifydate" : "createdate")
             let ascending = (settings.order.get() == 1)
             let sort = NSSortDescriptor(key: key, ascending: ascending)

@@ -37,7 +37,7 @@ class SettingMainViewController: UITableViewController {
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
             let email = settings.email.get()
-            if email != "" { cell.detailTextLabel?.text = email }
+            if !email.isEmpty { cell.detailTextLabel?.text = email }
         case (1, 0): cell.detailTextLabel?.text = sortItems[settings.sort.get()]
         case (1, 1): cell.detailTextLabel?.text = orderItems[settings.order.get()]
         default: break

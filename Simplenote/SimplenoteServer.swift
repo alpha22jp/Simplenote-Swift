@@ -71,12 +71,12 @@ final class SimplenoteServer {
     private func getToken(completion: ((Result, String)->Void)!) {
         // トークンを取得済みの場合は、サーバーから取得しないで再利用する
         // TODO: トークンがexpireしていた場合の対応が必要
-        if self.token != "" {
+        if !self.token.isEmpty {
             completion?(.Success, self.token)
             return
         }
         // アカウント情報が設定されているかを確認
-        if email == "" || password == "" {
+        if email.isEmpty || password.isEmpty {
             completion?(.NoAccountInformation, "")
             return
         }
@@ -95,7 +95,7 @@ final class SimplenoteServer {
             var result = self.statusCodeToResult(statusCode)
             if result.success() {
                 println(__FUNCTION__, "Token: \(data)")
-                if data != nil && data! != "" {
+                if data != nil && !data!.isEmpty {
                     result = .Success
                     self.token = data!
                 } else {

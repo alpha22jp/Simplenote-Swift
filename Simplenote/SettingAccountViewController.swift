@@ -27,7 +27,7 @@ class SettingAccountViewController: UITableViewController {
 
     // MARK: Saveボタンがタップされたときに呼ばれる
     @IBAction func didSaveButtonTap(sender: AnyObject) {
-        if emailField.text == "" || passwordField.text == "" {
+        if emailField.text.isEmpty || passwordField.text.isEmpty {
             showAlert("Error", message: "E-mail or Password field is empty")
             return
         }

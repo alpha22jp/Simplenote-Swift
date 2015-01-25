@@ -155,7 +155,7 @@ final class SimplenoteServer {
         }
     }
 
-    // MARK: 各ノートの本体 (属性情報付き) をサーバーから取得する
+    // MARK: ノートの内容 (＋属性情報) をサーバーから取得する
     func getNote(key: String, completion: ((Result, NoteAttributes!, String!)->Void)!) {
         getToken { (result, token) in
             if !result.success() {
@@ -179,6 +179,64 @@ final class SimplenoteServer {
                 let attr = self.makeNoteAttributes(json)
                 let content = json["content"].stringValue
                 completion?(.Success, attr, content)
+            }
+        }
+    }
+
+    // MARK: ノートを指定した内容で作成する
+    func createNote(content: String, completion: ((Result, NoteAttributes!, String!)->Void)!) {
+        getToken { (result, token) in
+            if !result.success() {
+                completion?(result, nil, nil)
+                return
+            }
+            let url = self.serverUrl + "api2/data?auth=\(token)&emil=\(self.email)"
+            let params = [ "content": content ]
+            Alamofire.request(.POST, url, parameters: params, encoding: .JSON).responseJSON {
+                (req, res, data, _) in
+                println(__FUNCTION__, "Status Code: \(res?.statusCode)")
+                var statusCode = (res == nil ? 0 : res!.statusCode)
+                var result = self.statusCodeToResult(statusCode)
+                if data == nil { result = .UnknownError }
+                if !result.success() {
+                    completion?(result, nil, nil)
+                    return
+                }
+                let json = JSON(data!)
+                println(__FUNCTION__, "Note: \(json)")
+                let attr = self.makeNoteAttributes(json)
+                completion?(.Success, attr, content)
+            }
+        }
+    }
+
+    // MARK: ノートを指定した内容で更新する
+    func updateNote(key: String, content: String, version: Int32,
+                    completion: ((Result, NoteAttributes!, String!)->Void)!) {
+        getToken { (result, token) in
+            if !result.success() {
+                completion?(result, nil, nil)
+                return
+            }
+            let url = self.serverUrl + "api2/data/\(key)?auth=\(token)&emil=\(self.email)"
+            let params = [ "content": content, "version": String(version) ]
+            Alamofire.request(.POST, url, parameters: params, encoding: .JSON).responseJSON {
+                (req, res, data, _) in
+                println(__FUNCTION__, "Status Code: \(res?.statusCode)")
+                var statusCode = (res == nil ? 0 : res!.statusCode)
+                var result = self.statusCodeToResult(statusCode)
+                if data == nil { result = .UnknownError }
+                if !result.success() {
+                    completion?(result, nil, nil)
+                    return
+                }
+                let json = JSON(data!)
+                println(__FUNCTION__, "Note: \(json)")
+                let attr = self.makeNoteAttributes(json)
+                // マージが発生したときだけ、レスポンスにcontentが含まれる
+                let contentUpdated = (json["content"].stringValue.isEmpty ?
+                                      content : json["content"].stringValue)
+                completion?(.Success, attr, contentUpdated)
             }
         }
     }

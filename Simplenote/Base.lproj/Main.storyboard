@@ -43,7 +43,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Notes" id="OO0-lL-mhN">
-                        <barButtonItem key="leftBarButtonItem" title="Setting" id="l99-C0-YZK">
+                        <barButtonItem key="leftBarButtonItem" systemItem="organize" id="l99-C0-YZK">
                             <connections>
                                 <segue destination="pxS-9s-y5F" kind="presentation" identifier="setting" id="peQ-Ew-rWI"/>
                             </connections>

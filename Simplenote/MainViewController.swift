@@ -181,10 +181,11 @@ class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdati
 
         // 検索バーの初期設定、delegateの設定、テーブルとの関連付けを行う
         searchController.searchResultsUpdater = self
-        searchController.hidesNavigationBarDuringPresentation = true // default
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.sizeToFit()
-        self.tableView.tableHeaderView = searchController.searchBar
+        // FIXME: これを設定してもキャンセルボタンが消えない...バグ？
+        searchController.searchBar.showsCancelButton = false
+        self.navigationItem.titleView = searchController.searchBar
 
         // これを設定しないと、検索状態から詳細画面に遷移した際に検索バーが残ってしまう
         definesPresentationContext = true

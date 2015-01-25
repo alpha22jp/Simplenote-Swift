@@ -64,7 +64,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     }
 
     // MARK: データベースに保存している全ノートの情報をサーバーと同期する
-    private func syncWithServer() {
+    func syncWithServer() {
         println(__FUNCTION__, "Start syncing cached note data with server...")
         // 全ノートの属性情報を取得
         simplenote.getIndex { (result, noteAttrList) in

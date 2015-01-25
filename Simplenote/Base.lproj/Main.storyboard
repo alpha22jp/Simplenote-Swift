@@ -48,9 +48,9 @@
                                 <segue destination="pxS-9s-y5F" kind="presentation" identifier="setting" id="peQ-Ew-rWI"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="ayY-d2-ZBh">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ayY-d2-ZBh">
                             <connections>
-                                <action selector="didRefreshButtonTap:" destination="84D-EX-Mkl" id="2gV-ry-MK8"/>
+                                <segue destination="VgG-lE-0fx" kind="presentation" id="Hae-fq-Bkv"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -196,7 +196,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ozv-JY-Yw8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1223" y="376"/>
+            <point key="canvasLocation" x="1219" y="376"/>
         </scene>
         <!--Setting Account View-->
         <scene sceneID="S6K-6c-ydg">
@@ -274,12 +274,12 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="90Y-0K-v3L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1645" y="-290"/>
+            <point key="canvasLocation" x="2059" y="376"/>
         </scene>
-        <!--Note View-->
+        <!--Note Browse View-->
         <scene sceneID="NYj-pi-w1Z">
             <objects>
-                <viewController storyboardIdentifier="note" title="Note View" id="n3d-Rl-VSK" customClass="NoteViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="note" title="Note Browse View" id="n3d-Rl-VSK" customClass="NoteViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mc1-MM-uNT"/>
                         <viewControllerLayoutGuide type="bottom" id="XV8-Q9-8cv"/>
@@ -293,6 +293,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2qJ-ux-plF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="790" y="-290"/>
+        </scene>
+        <!--Note Edit View-->
+        <scene sceneID="LAb-YK-PXN">
+            <objects>
+                <viewController title="Note Edit View" id="I9Q-WG-853" customClass="NoteEditViewController" customModule="Simplenote" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cvs-np-iOD"/>
+                        <viewControllerLayoutGuide type="bottom" id="xod-k1-8U1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kIU-Za-QPg">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="mdd-G1-cyh">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="lSw-jl-cC6">
+                            <connections>
+                                <action selector="didCancelButtonTap:" destination="I9Q-WG-853" id="XW5-6o-kZw"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="NYZ-VI-0mI">
+                            <connections>
+                                <action selector="didSaveButtonTap:" destination="I9Q-WG-853" id="zEH-oW-o6g"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Xn-6l-wzy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1645" y="-290"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="VSF-Av-r7J">
@@ -347,7 +377,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hd1-eA-D0Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1223" y="-290"/>
+            <point key="canvasLocation" x="1645" y="376"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="0d6-Ae-RbC">
+            <objects>
+                <navigationController storyboardIdentifier="noteEditNavigator" automaticallyAdjustsScrollViewInsets="NO" id="VgG-lE-0fx" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="b7M-yu-Xm2">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="I9Q-WG-853" kind="relationship" relationship="rootViewController" id="6gV-8g-znp"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vWo-ug-9Yv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1219" y="-290"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

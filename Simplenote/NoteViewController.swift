@@ -40,6 +40,15 @@ class NoteViewController: UIViewController, UIWebViewDelegate {
         // ノートを表示するビュー (textView or webView) を追加
         view.frame = self.view.bounds
         self.view.addSubview(view)
+
+        let barButton = UIBarButtonItem(barButtonSystemItem: .Edit, target: self,
+                                        action: "didEditButtonTap")
+        self.navigationItem.rightBarButtonItem = barButton
+    }
+
+    func didEditButtonTap() {
+        let viewController = storyboard?.instantiateViewControllerWithIdentifier("noteEditNavigator") as UIViewController
+        presentViewController(viewController, animated: true, completion: nil)
     }
 
     // MARK: - UIWebViewDelegate

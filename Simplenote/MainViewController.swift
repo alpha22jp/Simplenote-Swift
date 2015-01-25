@@ -19,10 +19,6 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
     // MARK: - Storyboard connection
 
-    @IBAction func didRefreshButtonTap(sender: AnyObject) {
-        syncWithServer()
-    }
-
     // MARK: - UIViewController
 
     override func viewDidLoad() {

@@ -11,6 +11,8 @@ import SwiftyJSON
 
 // MARK: Simplenoteサーバーへのアクセスを管理するクラス
 final class SimplenoteServer {
+
+    let serverUrl = "https://simple-note.appspot.com/"
     var token: String = "" // トークン
     var email: String = "" // E-mailアドレス
     var password: String = "" // パスワード
@@ -85,7 +87,7 @@ final class SimplenoteServer {
         let encodedStr = str.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
         let data = encodedStr?.dataUsingEncoding(NSUTF8StringEncoding)
         let base64data = data?.base64EncodedStringWithOptions(nil)
-        let url = "http://simple-note.appspot.com/api/login"
+        let url = serverUrl + "api/login"
         let params = [ base64data!: "" ]
         // サーバーにリクエストを送信してレスポンスを取得
         Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
@@ -128,7 +130,7 @@ final class SimplenoteServer {
                 completion?(result, nil)
                 return
             }
-            let url = "http://simple-note.appspot.com/api2/index"
+            let url = self.serverUrl + "api2/index"
             let params = [ "auth": token, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseJSON {
                 (_, res, data, _) in
@@ -160,7 +162,7 @@ final class SimplenoteServer {
                 completion?(result, nil, nil)
                 return
             }
-            let url = "https://simple-note.appspot.com/api2/data/" + key
+            let url = self.serverUrl + "api2/data/" + key
             let params = [ "auth": token, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseJSON {
                 (_, res, data, _) in

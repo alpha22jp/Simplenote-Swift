@@ -20,11 +20,12 @@
 
 ## How to build
 
-Before building the project, install CocoaPods 0.36.0 beta.1.
+Before building the project, install and setup CocoaPods 0.36.0 beta.1.
 ```Shell
 sudo gem install cocoapods --pre
+pod setup
 ```
-Get source code from GitHub and setup libraries provided from CocoaPods.
+Get source code from GitHub and install libraries provided from CocoaPods.
 ```Shell
 git clone --recuesive https://github.com/alpha22jp/Simplenote-Swift.git
 cd Simplenote-Swift
@@ -34,7 +35,7 @@ Open `Simplenote-Swift/Simplenote.xcworkspace` by XCode and build it!
 
 ## Todo
 
-* Support editting note
+* Support editting note (Now working on this)
 * Support Simplenote tags
 * Store password securely by KeyChain
 * Support multi languages

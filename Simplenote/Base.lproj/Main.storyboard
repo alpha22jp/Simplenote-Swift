@@ -50,7 +50,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="ayY-d2-ZBh">
                             <connections>
-                                <segue destination="VgG-lE-0fx" kind="presentation" id="Hae-fq-Bkv"/>
+                                <segue destination="VgG-lE-0fx" kind="presentation" identifier="toNoteEditView" id="Hae-fq-Bkv"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -292,7 +292,7 @@
                     <navigationItem key="navigationItem" title="Note" id="yZa-mI-GoT">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="VVv-ew-mrS">
                             <connections>
-                                <segue destination="VgG-lE-0fx" kind="presentation" id="uSa-Pr-kHX"/>
+                                <segue destination="VgG-lE-0fx" kind="presentation" identifier="toNoteEditView" id="uSa-Pr-kHX"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -312,6 +312,14 @@
                     <view key="view" contentMode="scaleToFill" id="kIU-Za-QPg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sCg-dw-fe0">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="mdd-G1-cyh">
@@ -326,6 +334,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="textView" destination="sCg-dw-fe0" id="p4F-Dt-dR7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Xn-6l-wzy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -389,7 +400,7 @@
         <!--Navigation Controller-->
         <scene sceneID="0d6-Ae-RbC">
             <objects>
-                <navigationController storyboardIdentifier="noteEditNavigator" automaticallyAdjustsScrollViewInsets="NO" id="VgG-lE-0fx" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="VgG-lE-0fx" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="b7M-yu-Xm2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

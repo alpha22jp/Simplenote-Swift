@@ -10,6 +10,12 @@ import UIKit
 
 class NoteEditViewController: UIViewController {
 
+    var note: Note? // 編集する対象のノート (画面遷移時にセットされる)
+
+    // MARK: - Storyboard connection
+
+    @IBOutlet weak var textView: UITextView!
+
     @IBAction func didSaveButtonTap(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
     }
@@ -18,10 +24,13 @@ class NoteEditViewController: UIViewController {
         dismissViewControllerAnimated(true, completion: nil)
     }
 
+    // MARK: - UIViewController
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        textView.text = note?.content ?? ""
     }
 
     override func didReceiveMemoryWarning() {

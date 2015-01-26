@@ -160,6 +160,8 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             controller.note = note
         } else if segue.identifier == "settings" {
             // Navigate to SettingView (present modally)
+        } else if segue.identifier == "toNoteEditView" {
+            // Navigate to NoteEditView (present modally)
         }
     }
 

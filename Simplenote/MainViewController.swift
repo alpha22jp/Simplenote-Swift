@@ -150,7 +150,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
-        if segue.identifier == "note" {
+        if segue.identifier == "toNoteView" {
             // Navigate to NoteView (show (e.g. push))
             let cell = sender as UITableViewCell
             let indexPath = tableView.indexPathForCell(cell)
@@ -158,7 +158,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             let controller = segue.destinationViewController as NoteViewController
             // 選択されているcellに対応するnoteをNoteViewに渡す
             controller.note = note
-        } else if segue.identifier == "settings" {
+        } else if segue.identifier == "toSettingView" {
             // Navigate to SettingView (present modally)
         } else if segue.identifier == "toNoteEditView" {
             // Navigate to NoteEditView (present modally)

@@ -33,7 +33,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="n3d-Rl-VSK" kind="show" identifier="note" id="WwH-Zb-16O"/>
+                                    <segue destination="n3d-Rl-VSK" kind="show" identifier="toNoteView" id="WwH-Zb-16O"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -45,7 +45,7 @@
                     <navigationItem key="navigationItem" title="Notes" id="OO0-lL-mhN">
                         <barButtonItem key="leftBarButtonItem" systemItem="organize" id="l99-C0-YZK">
                             <connections>
-                                <segue destination="pxS-9s-y5F" kind="presentation" identifier="setting" id="peQ-Ew-rWI"/>
+                                <segue destination="pxS-9s-y5F" kind="presentation" identifier="toSettingView" id="peQ-Ew-rWI"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="ayY-d2-ZBh">

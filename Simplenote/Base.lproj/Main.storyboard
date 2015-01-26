@@ -289,6 +289,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Note" id="yZa-mI-GoT">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="VVv-ew-mrS">
+                            <connections>
+                                <segue destination="VgG-lE-0fx" kind="presentation" id="uSa-Pr-kHX"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2qJ-ux-plF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -400,5 +407,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="mzE-lu-e06"/>
+        <segue reference="uSa-Pr-kHX"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -17,6 +17,7 @@ class Note: NSManagedObject {
     @NSManaged var version: Int32
     @NSManaged var isdeleted: Bool
     @NSManaged var markdown: Bool
+    @NSManaged var ismodified: Bool
 }
 
 // MARK: - ノート情報のデータベースを管理するクラス
@@ -132,6 +133,13 @@ final class NoteDatabase {
         req.predicate = NSPredicate(format: "%K = %@", "key", key)
         let notes = executeFetch(req)
         return notes.count > 0 ? notes[0] : nil
+    }
+
+    // MARK: ローカル側で追加・変更されたノートを返す
+    func searchModifiedNote() -> [Note] {
+        let req = getFetchRequest()
+        req.predicate = NSPredicate(format: "%K = TRUE", "ismodified")
+        return executeFetch(req)
     }
 
     // MARK: 指定されたノートを削除する

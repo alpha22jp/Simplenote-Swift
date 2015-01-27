@@ -24,15 +24,9 @@ class NoteViewController: UIViewController, UIWebViewDelegate {
         var view: UIView!
 
         if note.markdown {
-            var markdown = Markdown()
-            let cssPath = NSBundle.mainBundle().pathForResource("default", ofType: "css")
-            let htmlHeader = "<head><link href='\(cssPath!)' rel='stylesheet'/></head>"
-            let html = htmlHeader + markdown.transform(note.content)
             webView.delegate = self
-            webView.loadHTMLString(html, baseURL: NSBundle.mainBundle().bundleURL)
             view = webView
         } else {
-            textView.text = note.content
             textView.editable = false
             view = textView
         }
@@ -40,6 +34,21 @@ class NoteViewController: UIViewController, UIWebViewDelegate {
         // ノートを表示するビュー (textView or webView) を追加
         view.frame = self.view.bounds
         self.view.addSubview(view)
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+
+        // ノート編集画面から戻った時の再描画に必要
+        if note.markdown {
+            var markdown = Markdown()
+            let cssPath = NSBundle.mainBundle().pathForResource("default", ofType: "css")
+            let htmlHeader = "<head><link href='\(cssPath!)' rel='stylesheet'/></head>"
+            let html = htmlHeader + markdown.transform(note.content)
+            webView.loadHTMLString(html, baseURL: NSBundle.mainBundle().bundleURL)
+        } else {
+            textView.text = note.content
+        }
     }
 
     // MARK: - UIWebViewDelegate

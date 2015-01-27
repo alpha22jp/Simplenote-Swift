@@ -211,7 +211,7 @@ final class SimplenoteServer {
     }
 
     // MARK: ノートを指定した内容で更新する
-    func updateNote(key: String, content: String, version: Int32,
+    func updateNote(key: String, content: String, version: Int32, modifydate: NSTimeInterval,
                     completion: ((Result, NoteAttributes!, String!)->Void)!) {
         getToken { (result, token) in
             if !result.success() {
@@ -219,7 +219,8 @@ final class SimplenoteServer {
                 return
             }
             let url = self.serverUrl + "api2/data/\(key)?auth=\(token)&emil=\(self.email)"
-            let params = [ "content": content, "version": String(version) ]
+            let params = [ "content": content, "version": String(version),
+                           "modifydate": NSString(format: "%.6f", modifydate) ]
             Alamofire.request(.POST, url, parameters: params, encoding: .JSON).responseJSON {
                 (req, res, data, _) in
                 println(__FUNCTION__, "Status Code: \(res?.statusCode)")

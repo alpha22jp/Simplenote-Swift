@@ -59,9 +59,51 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
+    // MARK: ノート更新の共通処理
+    private func updateNote(note: Note, attr: SimplenoteServer.NoteAttributes, content: String) {
+        note.createdate = attr.createdate
+        note.modifydate = attr.modifydate
+        note.version = attr.version
+        note.isdeleted = (attr.deleted == 1)
+        note.markdown = attr.markdown
+        note.content = content
+    }
+
     // MARK: データベースに保存している全ノートの情報をサーバーと同期する
     func syncWithServer() {
         println(__FUNCTION__, "Start syncing cached note data with server...")
+        // ローカル側で追加・変更されたノートの同期
+        for note in database.searchModifiedNote() {
+            if note.key.isEmpty {
+                println(__FUNCTION__, "Create new note on server")
+                simplenote.createNote(note.content) {
+                    (result, attr, content) in
+                    if !result.success() {
+                        println(__FUNCTION__, "result = \(result.rawValue)")
+                        return
+                    }
+                    // データベースのノート情報を更新
+                    self.updateNote(note, attr: attr, content: content)
+                    note.key = attr.key // サーバーから取得したキーをセット
+                    note.ismodified = false
+                    self.database.saveContext()
+                }
+            } else {
+                println(__FUNCTION__, "Update note, key = \(note.key), version = \(note.version)")
+                simplenote.updateNote(note.key, content: note.content, version: note.version,
+                                      modifydate: note.modifydate) {
+                    (result, attr, content) in
+                    if !result.success() {
+                        println(__FUNCTION__, "result = \(result.rawValue)")
+                        return
+                    }
+                    // データベースのノート情報を更新
+                    self.updateNote(note, attr: attr, content: content)
+                    note.ismodified = false
+                    self.database.saveContext()
+                }
+            }
+        }
         // 全ノートの属性情報を取得
         simplenote.getIndex { (result, noteAttrList) in
             if !result.success() {
@@ -86,12 +128,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                             note = self.database.createNote(attr.key)
                         }
                         // データベースのノート情報を更新
-                        note.createdate = attr.createdate
-                        note.modifydate = attr.modifydate
-                        note.version = attr.version
-                        note.isdeleted = (attr.deleted == 1)
-                        note.markdown = attr.markdown
-                        note.content = content
+                        self.updateNote(note, attr: attr, content: content)
                         self.database.saveContext()
                     }
                 }

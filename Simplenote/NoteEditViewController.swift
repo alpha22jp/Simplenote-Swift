@@ -11,12 +11,24 @@ import UIKit
 class NoteEditViewController: UIViewController {
 
     var note: Note? // 編集する対象のノート (画面遷移時にセットされる)
+    let database = NoteDatabase.sharedInstance
 
     // MARK: - Storyboard connection
 
     @IBOutlet weak var textView: UITextView!
 
     @IBAction func didSaveButtonTap(sender: AnyObject) {
+        let date = NSDate().timeIntervalSince1970 // 現在時刻を取得
+        if note == nil {
+            println(__FUNCTION__, "Create new note")
+            note = self.database.createNote("")
+            note!.createdate = date
+        }
+        note!.modifydate = date
+        note!.content = textView.text
+        note!.ismodified = true // ローカル変更フラグを立てる
+        self.database.saveContext()
+
         dismissViewControllerAnimated(true, completion: nil)
     }
 

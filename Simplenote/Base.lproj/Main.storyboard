@@ -43,12 +43,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Notes" id="OO0-lL-mhN">
-                        <barButtonItem key="leftBarButtonItem" systemItem="organize" id="l99-C0-YZK">
+                        <barButtonItem key="leftBarButtonItem" image="SettingButton" id="l99-C0-YZK">
                             <connections>
                                 <segue destination="pxS-9s-y5F" kind="presentation" identifier="toSettingView" id="peQ-Ew-rWI"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ayY-d2-ZBh">
+                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="ayY-d2-ZBh">
                             <connections>
                                 <segue destination="VgG-lE-0fx" kind="presentation" identifier="toNoteEditView" id="Hae-fq-Bkv"/>
                             </connections>
@@ -326,6 +326,7 @@
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="lSw-jl-cC6">
                             <connections>
                                 <action selector="didCancelButtonTap:" destination="I9Q-WG-853" id="XW5-6o-kZw"/>
+                                <segue destination="QEg-N0-e2Q" kind="unwind" unwindAction="unwindBySegue:" id="tYx-Oa-SPD"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="NYZ-VI-0mI">
@@ -339,6 +340,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Xn-6l-wzy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="QEg-N0-e2Q" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1645" y="-290"/>
         </scene>
@@ -416,6 +418,9 @@
             <point key="canvasLocation" x="1219" y="-290"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="SettingButton" width="32" height="32"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="mzE-lu-e06"/>
         <segue reference="uSa-Pr-kHX"/>

@@ -104,21 +104,23 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                 }
             }
         }
-        // 全ノートの属性情報を取得
-        simplenote.getIndex { (result, noteAttrList) in
+        // 全ノートのインデックスを取得
+        simplenote.getIndex { (result, noteIndex) in
             if !result.success() {
                 println(__FUNCTION__, "result = \(result.rawValue)")
                 self.refreshControl?.endRefreshing()
                 self.showAlert("Error", message: result.rawValue)
                 return
             }
-            for attr in noteAttrList {
-                var note: Note! = self.database.searchNote(attr.key)
-                println(__FUNCTION__, "Version check, local:\(note?.version), remote:\(attr.version), key:\(note?.key)")
-                // サーバーの方がバージョンが新しいか、ローカルに存在しないときだけ更新
-                if note == nil || attr.version > note.version {
-                    // ノートの本体を取得
-                    self.simplenote.getNote(attr.key) { (result, attr, content) in
+            for item in noteIndex {
+                // ノートの本体を取得
+                self.simplenote.getNote(item.key) {
+                    (result, attr, content) in
+                    var note: Note! = self.database.searchNote(attr.key)
+                    println("Modify date, local:\(note.modifydate), remote:\(item.modifydate)")
+                    println(__FUNCTION__, "Version check, local:\(note?.version), remote:\(attr.version), key:\(note?.key)")
+                    // サーバーの方がバージョンが新しいか、ローカルに存在しないときだけ更新
+                    if note == nil || attr.version > note.version {
                         if !result.success() {
                             // TODO: ノート本体の取得に失敗、ここでもエラー通知が必要か？
                             return

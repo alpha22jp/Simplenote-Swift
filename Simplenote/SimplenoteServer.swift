@@ -130,7 +130,7 @@ final class SimplenoteServer {
                 completion?(result, nil)
                 return
             }
-            let url = self.serverUrl + "api2/index"
+            let url = self.serverUrl + "api/index"
             let params = [ "auth": token, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseJSON {
                 (_, res, data, _) in
@@ -143,11 +143,23 @@ final class SimplenoteServer {
                     return
                 }
                 let json = JSON(data!)
-                let count: Int = json["count"].intValue
-                println(__FUNCTION__, "Note count: \(count)")
                 var noteAttrList: [NoteAttributes] = []
-                for i in 0 ..< count {
-                    let attr = self.makeNoteAttributes(json["data"][i])
+                for i in 0 ..< json.count {
+                    let formatter = NSDateFormatter()
+                    formatter.locale = NSLocale(localeIdentifier:"ja_JP")
+                    formatter.timeZone = NSTimeZone(name: "GMT")
+                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
+                    var date = formatter.dateFromString(json[i]["modify"].stringValue)
+                    if date == nil {
+                        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                        date = formatter.dateFromString(json[i]["modify"].stringValue)
+                    }
+                    let attr = NoteAttributes(key: json[i]["key"].stringValue,
+                                              createdate: date!.timeIntervalSince1970,
+                                              modifydate: date!.timeIntervalSince1970,
+                                              version: 0,
+                                              deleted: json[i]["deleted"].boolValue ? 1 : 0,
+                                              markdown: false)
                     noteAttrList.append(attr)
                 }
                 completion?(.Success, noteAttrList)

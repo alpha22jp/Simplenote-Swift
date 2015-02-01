@@ -61,6 +61,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
     // MARK: ノート更新の共通処理
     private func updateNote(note: Note, attr: SimplenoteServer.NoteAttributes, content: String) {
+        note.key = attr.key
         note.createdate = attr.createdate
         note.modifydate = attr.modifydate
         note.version = attr.version
@@ -74,16 +75,17 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         println(__FUNCTION__, "Start syncing cached note data with server...")
         // ローカル側で追加・変更されたノートの同期
         for note in database.searchModifiedNote() {
-            if note.key.isEmpty {
+            if note.indexkey.isEmpty {
                 println(__FUNCTION__, "Create new note on server")
                 simplenote.createNote(note.content) {
-                    (result, attr, content) in
+                    (result, indexkey, attr, content) in
                     if !result.success() {
                         println(__FUNCTION__, "result = \(result.rawValue)")
                         return
                     }
                     // データベースのノート情報を更新
                     self.updateNote(note, attr: attr, content: content)
+                    note.indexkey = indexkey
                     note.key = attr.key // サーバーから取得したキーをセット
                     note.ismodified = false
                     self.database.saveContext()
@@ -112,22 +114,23 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                 self.showAlert("Error", message: result.rawValue)
                 return
             }
-            for item in noteIndex {
-                // ノートの本体を取得
-                self.simplenote.getNote(item.key) {
-                    (result, attr, content) in
-                    var note: Note! = self.database.searchNote(attr.key)
-                    println("Modify date, local:\(note.modifydate), remote:\(item.modifydate)")
-                    println(__FUNCTION__, "Version check, local:\(note?.version), remote:\(attr.version), key:\(note?.key)")
-                    // サーバーの方がバージョンが新しいか、ローカルに存在しないときだけ更新
-                    if note == nil || attr.version > note.version {
+            for index in noteIndex {
+                // データベースから検索キーが一致するノートを検索
+                var note: Note! = self.database.searchNote(index.key)
+                // ノートがローカルに存在しないか、サーバーの方が更新日時が新しいか
+                // 削除フラグが異なるときだけ更新
+                if note == nil || note.modifydate < index.modifydate ||
+                   note.isdeleted != (index.deleted == 1) {
+                    // ノートの本体を取得
+                    self.simplenote.getNote(index.key) {
+                        (result, attr, content) in
                         if !result.success() {
                             // TODO: ノート本体の取得に失敗、ここでもエラー通知が必要か？
                             return
                         }
                         if note == nil {
                             println(__FUNCTION__, "Creating new note in DB...")
-                            note = self.database.createNote(attr.key)
+                            note = self.database.addNote(index.key)
                         }
                         // データベースのノート情報を更新
                         self.updateNote(note, attr: attr, content: content)

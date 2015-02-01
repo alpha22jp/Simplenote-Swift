@@ -17,6 +17,13 @@ final class SimplenoteServer {
     var email: String = "" // E-mailアドレス
     var password: String = "" // パスワード
 
+    // MARK: ノートのインデックス情報 (api/indexで取得する情報)
+    struct NoteIndex {
+        var key: String // 検索キー (NoteAttributesのkeyとは異なる)
+        var modifydate: NSTimeInterval // 最終変更日時
+        var deleted: Int32 // 削除済みフラグ
+    }
+
     // MARK: ノートの属性情報
     struct NoteAttributes {
         var key: String // キー (ノートの固有ID)
@@ -123,8 +130,8 @@ final class SimplenoteServer {
                               markdown: markdown)
     }
 
-    // MARK: インデックス (全ノートの属性情報) をサーバーから取得する
-    func getIndex(completion: ((Result, [NoteAttributes]!)->Void)!) {
+    // MARK: 全ノートのインデックス情報をサーバーから取得する
+    func getIndex(completion: ((Result, [NoteIndex]!)->Void)!) {
         getToken { (result, token) in
             if !result.success() {
                 completion?(result, nil)
@@ -143,26 +150,24 @@ final class SimplenoteServer {
                     return
                 }
                 let json = JSON(data!)
-                var noteAttrList: [NoteAttributes] = []
+                var noteIndexList: [NoteIndex] = []
                 for i in 0 ..< json.count {
                     let formatter = NSDateFormatter()
                     formatter.locale = NSLocale(localeIdentifier:"ja_JP")
                     formatter.timeZone = NSTimeZone(name: "GMT")
+                    // ノートによってフォーマットが異なる (ミリ秒表記の有無) 対策
                     formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
                     var date = formatter.dateFromString(json[i]["modify"].stringValue)
                     if date == nil {
                         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                         date = formatter.dateFromString(json[i]["modify"].stringValue)
                     }
-                    let attr = NoteAttributes(key: json[i]["key"].stringValue,
-                                              createdate: date!.timeIntervalSince1970,
-                                              modifydate: date!.timeIntervalSince1970,
-                                              version: 0,
-                                              deleted: json[i]["deleted"].boolValue ? 1 : 0,
-                                              markdown: false)
-                    noteAttrList.append(attr)
+                    let index = NoteIndex(key: json[i]["key"].stringValue,
+                                          modifydate: date!.timeIntervalSince1970,
+                                          deleted: json[i]["deleted"].boolValue ? 1 : 0)
+                    noteIndexList.append(index)
                 }
-                completion?(.Success, noteAttrList)
+                completion?(.Success, noteIndexList)
             }
         }
     }
@@ -196,28 +201,32 @@ final class SimplenoteServer {
     }
 
     // MARK: ノートを指定した内容で作成する
-    func createNote(content: String, completion: ((Result, NoteAttributes!, String!)->Void)!) {
+    func createNote(content: String, completion: ((Result, String!, NoteAttributes!, String!)->Void)!) {
         getToken { (result, token) in
             if !result.success() {
-                completion?(result, nil, nil)
+                completion?(result, nil, nil, nil)
                 return
             }
-            let url = self.serverUrl + "api2/data?auth=\(token)&emil=\(self.email)"
-            let params = [ "content": content ]
-            Alamofire.request(.POST, url, parameters: params, encoding: .JSON).responseJSON {
+            let url = self.serverUrl + "api/note?auth=\(token)&emil=\(self.email)"
+            let data = content.dataUsingEncoding(NSUTF8StringEncoding)
+            let base64data = data?.base64EncodedStringWithOptions(nil)
+            let params = [base64data!: ""]
+            Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
                 (req, res, data, _) in
                 println(__FUNCTION__, "Status Code: \(res?.statusCode)")
                 var statusCode = (res == nil ? 0 : res!.statusCode)
                 var result = self.statusCodeToResult(statusCode)
                 if data == nil { result = .UnknownError }
                 if !result.success() {
-                    completion?(result, nil, nil)
+                    completion?(result, nil, nil, nil)
                     return
                 }
-                let json = JSON(data!)
-                println(__FUNCTION__, "Note: \(json)")
-                let attr = self.makeNoteAttributes(json)
-                completion?(.Success, attr, content)
+                let indexkey = data!
+                println(__FUNCTION__, "Index key: \(indexkey)")
+                self.getNote(indexkey) {
+                    (result, attr, content) in
+                    completion(result, indexkey, attr, content)
+                }
             }
         }
     }

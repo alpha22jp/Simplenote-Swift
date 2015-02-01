@@ -21,7 +21,7 @@ class NoteEditViewController: UIViewController {
         let date = NSDate().timeIntervalSince1970 // 現在時刻を取得
         if note == nil {
             println(__FUNCTION__, "Create new note")
-            note = self.database.createNote("")
+            note = self.database.addNote("")
             note!.createdate = date
         }
         note!.modifydate = date

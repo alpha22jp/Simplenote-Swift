@@ -29,7 +29,7 @@ class NoteEditViewController: UIViewController {
         note!.ismodified = true // ローカル変更フラグを立てる
         self.database.saveContext()
 
-        dismissViewControllerAnimated(true, completion: nil)
+        performSegueWithIdentifier("noteEditToMain", sender: nil)
     }
 
     @IBAction func didCancelButtonTap(sender: AnyObject) {

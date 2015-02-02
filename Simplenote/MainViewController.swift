@@ -207,6 +207,17 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         }
     }
 
+    @IBAction func unwindBySegue(segue: UIStoryboardSegue) {
+        println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
+        if segue.identifier == "settingToMain" {
+            // Navigate back to MainView from SettingsView
+        } else if segue.identifier == "noteEditToMain" {
+            // Navigate back to MainView from NoteEditView
+            // 遷移元のビューは以下の方法で参照可能
+            let controller = segue.sourceViewController as NoteEditViewController
+        }
+    }
+
 }
 
 // MARK: - 検索バー付きのノート一覧画面を管理する拡張クラス

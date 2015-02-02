@@ -155,11 +155,13 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="4qw-1r-91D">
                             <connections>
                                 <action selector="didDoneButtonTap:" destination="mnR-Ky-XJy" id="jpS-3Q-vqV"/>
+                                <segue destination="cQH-bv-n4W" kind="unwind" identifier="settingToMain" unwindAction="unwindBySegue:" id="kzV-Zd-Gr9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zmf-oD-bkQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="cQH-bv-n4W" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="790" y="376"/>
         </scene>
@@ -326,7 +328,6 @@
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="lSw-jl-cC6">
                             <connections>
                                 <action selector="didCancelButtonTap:" destination="I9Q-WG-853" id="XW5-6o-kZw"/>
-                                <segue destination="QEg-N0-e2Q" kind="unwind" unwindAction="unwindBySegue:" id="tYx-Oa-SPD"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="NYZ-VI-0mI">
@@ -337,6 +338,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="textView" destination="sCg-dw-fe0" id="p4F-Dt-dR7"/>
+                        <segue destination="QEg-N0-e2Q" kind="unwind" identifier="noteEditToMain" unwindAction="unwindBySegue:" id="bLt-mX-fT9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Xn-6l-wzy" userLabel="First Responder" sceneMemberID="firstResponder"/>

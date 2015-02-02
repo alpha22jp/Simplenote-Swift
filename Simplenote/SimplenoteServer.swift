@@ -99,16 +99,16 @@ final class SimplenoteServer {
         // サーバーにリクエストを送信してレスポンスを取得
         Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
             (_, res, data, _) in
-            println(__FUNCTION__, "Status Code: \(res?.statusCode)")
             var statusCode = (res == nil ? 0 : res!.statusCode)
+            println(__FUNCTION__, "Status Code: \(statusCode)")
             var result = self.statusCodeToResult(statusCode)
             if result.success() {
                 println(__FUNCTION__, "Token: \(data)")
-                if data != nil && !data!.isEmpty {
+                if data == nil || data!.isEmpty {
+                    result = .UnknownError
+                } else {
                     result = .Success
                     self.token = data!
-                } else {
-                    result = .UnknownError
                 }
             }
             completion?(result, self.token)
@@ -141,8 +141,8 @@ final class SimplenoteServer {
             let params = [ "auth": token, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseJSON {
                 (_, res, data, _) in
-                println(__FUNCTION__, "Status Code: \(res?.statusCode)")
                 var statusCode = (res == nil ? 0 : res!.statusCode)
+                println(__FUNCTION__, "Status Code: \(statusCode)")
                 var result = self.statusCodeToResult(statusCode)
                 if data == nil { result = .UnknownError }
                 if !result.success() {
@@ -201,10 +201,10 @@ final class SimplenoteServer {
     }
 
     // MARK: ノートを指定した内容で作成する
-    func createNote(content: String, completion: ((Result, String!, NoteAttributes!, String!)->Void)!) {
+    func createNote(content: String, completion: ((Result, String!, NoteAttributes!)->Void)!) {
         getToken { (result, token) in
             if !result.success() {
-                completion?(result, nil, nil, nil)
+                completion?(result, nil, nil)
                 return
             }
             let url = self.serverUrl + "api/note?auth=\(token)&emil=\(self.email)"
@@ -213,19 +213,19 @@ final class SimplenoteServer {
             let params = [base64data!: ""]
             Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
                 (req, res, data, _) in
-                println(__FUNCTION__, "Status Code: \(res?.statusCode)")
                 var statusCode = (res == nil ? 0 : res!.statusCode)
+                println(__FUNCTION__, "Status Code: \(statusCode)")
                 var result = self.statusCodeToResult(statusCode)
                 if data == nil { result = .UnknownError }
                 if !result.success() {
-                    completion?(result, nil, nil, nil)
+                    completion?(result, nil, nil)
                     return
                 }
                 let indexkey = data!
                 println(__FUNCTION__, "Index key: \(indexkey)")
                 self.getNote(indexkey) {
-                    (result, attr, content) in
-                    completion(result, indexkey, attr, content)
+                    (result, attr, _) in
+                    completion(result, indexkey, attr)
                 }
             }
         }
@@ -244,8 +244,8 @@ final class SimplenoteServer {
                            "modifydate": NSString(format: "%.6f", modifydate) ]
             Alamofire.request(.POST, url, parameters: params, encoding: .JSON).responseJSON {
                 (req, res, data, _) in
-                println(__FUNCTION__, "Status Code: \(res?.statusCode)")
                 var statusCode = (res == nil ? 0 : res!.statusCode)
+                println(__FUNCTION__, "Status Code: \(statusCode)")
                 var result = self.statusCodeToResult(statusCode)
                 if data == nil { result = .UnknownError }
                 if !result.success() {

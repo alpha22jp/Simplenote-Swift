@@ -78,13 +78,13 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             if note.indexkey.isEmpty {
                 println(__FUNCTION__, "Create new note on server")
                 simplenote.createNote(note.content) {
-                    (result, indexkey, attr, content) in
+                    (result, indexkey, attr) in
                     if !result.success() {
                         println(__FUNCTION__, "result = \(result.rawValue)")
                         return
                     }
                     // データベースのノート情報を更新
-                    self.updateNote(note, attr: attr, content: content)
+                    self.updateNote(note, attr: attr, content: note.content)
                     note.indexkey = indexkey
                     note.key = attr.key // サーバーから取得したキーをセット
                     note.ismodified = false

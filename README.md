@@ -15,19 +15,19 @@
 
 ## Environment
 
-* XCode 6.1.1
-* iOS 8.0 later
+* XCode 6.2
+* iOS 8.0 or higher
 
 ## How to build
 
-Before building the project, install and setup CocoaPods 0.36.0 beta.1.
+Before building the project, install and setup CocoaPods (0.36.0).
 ```Shell
-sudo gem install cocoapods --pre
+sudo gem install cocoapods
 pod setup
 ```
 Get source code from GitHub and install libraries provided from CocoaPods.
 ```Shell
-git clone --recuesive https://github.com/alpha22jp/Simplenote-Swift.git
+git clone --recursive https://github.com/alpha22jp/Simplenote-Swift.git
 cd Simplenote-Swift
 pod install
 ```

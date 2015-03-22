@@ -17,16 +17,10 @@ final class SimplenoteServer {
     var email: String = "" // E-mailアドレス
     var password: String = "" // パスワード
 
-    // MARK: ノートのインデックス情報 (api/indexで取得する情報)
-    struct NoteIndex {
-        var key: String // 検索キー (NoteAttributesのkeyとは異なる)
-        var modifydate: NSTimeInterval // 最終変更日時
-        var deleted: Int32 // 削除済みフラグ
-    }
-
     // MARK: ノートの属性情報
     struct NoteAttributes {
         var key: String // キー (ノートの固有ID)
+        var syncnum: Int32 // 同期回数
         var createdate: NSTimeInterval // 作成日時
         var modifydate: NSTimeInterval // 最終変更日時
         var version: Int32 // バージョン
@@ -123,6 +117,7 @@ final class SimplenoteServer {
             if systemtags[i].stringValue == "markdown" { markdown = true }
         }
         return NoteAttributes(key: data["key"].stringValue,
+                              syncnum: data["syncnum"].int32Value,
                               createdate: data["createdate"].doubleValue,
                               modifydate: data["modifydate"].doubleValue,
                               version: data["version"].int32Value,
@@ -130,45 +125,45 @@ final class SimplenoteServer {
                               markdown: markdown)
     }
 
-    // MARK: 全ノートのインデックス情報をサーバーから取得する
-    func getIndex(completion: ((Result, [NoteIndex]!)->Void)!) {
+    private func getIndexInternal(noteAttrList: [NoteAttributes], mark: String,
+                                  completion: ((Result, [NoteAttributes]!)->Void)!) {
+        let url = self.serverUrl + "api2/index"
+        var params = ["length": "100", "auth": token, "email": self.email]
+        if !mark.isEmpty { params["mark"] = mark }
+        Alamofire.request(.GET, url, parameters: params).responseJSON {
+            (_, res, resData, _) in
+            var statusCode = (res == nil ? 0 : res!.statusCode)
+            println(__FUNCTION__, "Status Code: \(statusCode)")
+            var result = self.statusCodeToResult(statusCode)
+            if resData == nil { result = .UnknownError }
+            if !result.success() {
+                completion?(result, nil)
+                return
+            }
+            let json = JSON(resData!)
+            println(__FUNCTION__, "Note list: \(json)")
+            var newNoteAttrList: [NoteAttributes] = noteAttrList
+            for (index: String, subJson: JSON) in json["data"] {
+                let attr = self.makeNoteAttributes(subJson)
+                newNoteAttrList.append(attr)
+            }
+            let newMark = json["mark"].stringValue
+            if newMark.isEmpty {
+               completion?(.Success, newNoteAttrList)
+            } else {
+                self.getIndexInternal(newNoteAttrList, mark: newMark, completion: completion)
+            }
+        }
+    }
+
+    // MARK: 全ノートの属性情報をサーバーから取得する
+    func getIndex(completion: ((Result, [NoteAttributes]!)->Void)!) {
         getToken { (result, token) in
             if !result.success() {
                 completion?(result, nil)
                 return
             }
-            let url = self.serverUrl + "api/index"
-            let params = [ "auth": token, "email": self.email ]
-            Alamofire.request(.GET, url, parameters: params).responseJSON {
-                (_, res, data, _) in
-                var statusCode = (res == nil ? 0 : res!.statusCode)
-                println(__FUNCTION__, "Status Code: \(statusCode)")
-                var result = self.statusCodeToResult(statusCode)
-                if data == nil { result = .UnknownError }
-                if !result.success() {
-                    completion?(result, nil)
-                    return
-                }
-                let json = JSON(data!)
-                var noteIndexList: [NoteIndex] = []
-                for i in 0 ..< json.count {
-                    let formatter = NSDateFormatter()
-                    formatter.locale = NSLocale(localeIdentifier:"ja_JP")
-                    formatter.timeZone = NSTimeZone(name: "GMT")
-                    // ノートによってフォーマットが異なる (ミリ秒表記の有無) 対策
-                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
-                    var date = formatter.dateFromString(json[i]["modify"].stringValue)
-                    if date == nil {
-                        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                        date = formatter.dateFromString(json[i]["modify"].stringValue)
-                    }
-                    let index = NoteIndex(key: json[i]["key"].stringValue,
-                                          modifydate: date!.timeIntervalSince1970,
-                                          deleted: json[i]["deleted"].boolValue ? 1 : 0)
-                    noteIndexList.append(index)
-                }
-                completion?(.Success, noteIndexList)
-            }
+            self.getIndexInternal([], mark: "", completion: completion)
         }
     }
 
@@ -200,38 +195,7 @@ final class SimplenoteServer {
         }
     }
 
-    // MARK: ノートを指定した内容で作成する
-    func createNote(content: String, completion: ((Result, String!, NoteAttributes!)->Void)!) {
-        getToken { (result, token) in
-            if !result.success() {
-                completion?(result, nil, nil)
-                return
-            }
-            let url = self.serverUrl + "api/note?auth=\(token)&emil=\(self.email)"
-            let data = content.dataUsingEncoding(NSUTF8StringEncoding)
-            let base64data = data?.base64EncodedStringWithOptions(nil)
-            let params = [base64data!: ""]
-            Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
-                (req, res, data, _) in
-                var statusCode = (res == nil ? 0 : res!.statusCode)
-                println(__FUNCTION__, "Status Code: \(statusCode)")
-                var result = self.statusCodeToResult(statusCode)
-                if data == nil { result = .UnknownError }
-                if !result.success() {
-                    completion?(result, nil, nil)
-                    return
-                }
-                let indexkey = data!
-                println(__FUNCTION__, "Index key: \(indexkey)")
-                self.getNote(indexkey) {
-                    (result, attr, _) in
-                    completion(result, indexkey, attr)
-                }
-            }
-        }
-    }
-
-    // MARK: ノートを指定した内容で更新する
+    // MARK: ノートを指定した内容で更新 (または作成) する
     func updateNote(key: String, content: String, version: Int32, modifydate: NSTimeInterval,
                     completion: ((Result, NoteAttributes!, String!)->Void)!) {
         getToken { (result, token) in
@@ -239,7 +203,8 @@ final class SimplenoteServer {
                 completion?(result, nil, nil)
                 return
             }
-            let url = self.serverUrl + "api2/data/\(key)?auth=\(token)&emil=\(self.email)"
+            let url = self.serverUrl + "api2/data" +
+            (key.isEmpty ? "" : "/\(key)") + "?auth=\(token)&emil=\(self.email)"
             let params = [ "content": content, "version": String(version),
                            "modifydate": NSString(format: "%.6f", modifydate) ]
             Alamofire.request(.POST, url, parameters: params, encoding: .JSON).responseJSON {

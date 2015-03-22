@@ -10,8 +10,8 @@ import CoreData
 
 // MARK: - ノート情報のクラス (CoreDataのNote Entityに紐付けられている)
 class Note: NSManagedObject {
-    @NSManaged var indexkey: String
     @NSManaged var key: String
+    @NSManaged var syncnum: Int32
     @NSManaged var content: String
     @NSManaged var createdate: NSTimeInterval
     @NSManaged var modifydate: NSTimeInterval
@@ -122,16 +122,17 @@ final class NoteDatabase {
     }
 
     // MARK: ノートを新規作成して作成したノートを返す
-    func addNote(indexkey: String) -> Note {
+    func addNote(key: String) -> Note {
         var note = NSEntityDescription.insertNewObjectForEntityForName("Note", inManagedObjectContext: managedObjectContext!) as Note
-        note.indexkey = indexkey
+        note.key = key
+        note.syncnum = 0
         return note
     }
 
-    // MARK: 与えられた検索キーに一致するノートを返す
-    func searchNote(indexkey: String) -> Note? {
+    // MARK: 与えられたキーに一致するノートを返す
+    func searchNote(key: String) -> Note? {
         let req = getFetchRequest()
-        req.predicate = NSPredicate(format: "%K = %@", "indexkey", indexkey)
+        req.predicate = NSPredicate(format: "%K = %@", "key", key)
         let notes = executeFetch(req)
         return notes.count > 0 ? notes[0] : nil
     }

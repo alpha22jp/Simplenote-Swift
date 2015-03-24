@@ -111,11 +111,8 @@ final class SimplenoteServer {
 
     // MARK: 応答のJSONデータからノート属性情報を生成する
     private func makeNoteAttributes(data: JSON) -> NoteAttributes {
-        let systemtags = data["systemtags"]
-        var markdown = false
-        for i in 0 ..< systemtags.count {
-            if systemtags[i].stringValue == "markdown" { markdown = true }
-        }
+        let systemtags = data["systemtags"].arrayValue
+        let markdown = (systemtags.filter { $0.stringValue == "markdown" }.count > 0)
         return NoteAttributes(key: data["key"].stringValue,
                               syncnum: data["syncnum"].int32Value,
                               createdate: data["createdate"].doubleValue,
@@ -141,15 +138,11 @@ final class SimplenoteServer {
                 return
             }
             let json = JSON(resData!)
-            println(__FUNCTION__, "Note list: \(json)")
             var newNoteAttrList: [NoteAttributes] = noteAttrList
-            for (index: String, subJson: JSON) in json["data"] {
-                let attr = self.makeNoteAttributes(subJson)
-                newNoteAttrList.append(attr)
-            }
+            json["data"].arrayValue.map { newNoteAttrList.append(self.makeNoteAttributes($0)) }
             let newMark = json["mark"].stringValue
             if newMark.isEmpty {
-               completion?(.Success, newNoteAttrList)
+                completion?(.Success, newNoteAttrList)
             } else {
                 self.getIndexInternal(newNoteAttrList, mark: newMark, completion: completion)
             }

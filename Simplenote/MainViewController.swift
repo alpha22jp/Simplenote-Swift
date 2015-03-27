@@ -62,6 +62,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     // MARK: ノート更新の共通処理
     private func updateNote(note: Note, attr: SimplenoteServer.NoteAttributes, content: String) {
         note.key = attr.key
+        note.syncnum = attr.syncnum
         note.createdate = attr.createdate
         note.modifydate = attr.modifydate
         note.version = attr.version
@@ -75,65 +76,46 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         println(__FUNCTION__, "Start syncing cached note data with server...")
         // ローカル側で追加・変更されたノートの同期
         for note in database.searchModifiedNote() {
-            if note.indexkey.isEmpty {
-                println(__FUNCTION__, "Create new note on server")
-                simplenote.createNote(note.content) {
-                    (result, indexkey, attr) in
-                    if !result.success() {
-                        println(__FUNCTION__, "result = \(result.rawValue)")
-                        return
-                    }
-                    // データベースのノート情報を更新
-                    self.updateNote(note, attr: attr, content: note.content)
-                    note.indexkey = indexkey
-                    note.key = attr.key // サーバーから取得したキーをセット
-                    note.ismodified = false
-                    self.database.saveContext()
+            println(__FUNCTION__, "Update note, key = \(note.key), version = \(note.version)")
+            simplenote.updateNote(note.key, content: note.content, version: note.version, modifydate: note.modifydate) {
+                (result, noteAttr, content) in
+                if !result.success() {
+                    println(__FUNCTION__, "result = \(result.rawValue)")
+                    return
                 }
-            } else {
-                println(__FUNCTION__, "Update note, key = \(note.key), version = \(note.version)")
-                simplenote.updateNote(note.key, content: note.content, version: note.version,
-                                      modifydate: note.modifydate) {
-                    (result, attr, content) in
-                    if !result.success() {
-                        println(__FUNCTION__, "result = \(result.rawValue)")
-                        return
-                    }
-                    // データベースのノート情報を更新
-                    self.updateNote(note, attr: attr, content: content)
-                    note.ismodified = false
-                    self.database.saveContext()
-                }
+                // データベースのノート情報を更新
+                self.updateNote(note, attr: noteAttr, content: content)
+                note.ismodified = false
+                self.database.saveContext()
             }
         }
         // 全ノートのインデックスを取得
-        simplenote.getIndex { (result, noteIndex) in
+        simplenote.getIndex { (result, noteAttrList) in
             if !result.success() {
                 println(__FUNCTION__, "result = \(result.rawValue)")
                 self.refreshControl?.endRefreshing()
                 self.showAlert("Error", message: result.rawValue)
                 return
             }
-            for index in noteIndex {
-                // データベースから検索キーが一致するノートを検索
-                var note: Note! = self.database.searchNote(index.key)
-                // ノートがローカルに存在しないか、サーバーの方が更新日時が新しいか
-                // 削除フラグが異なるときだけ更新
-                if note == nil || note.modifydate < index.modifydate ||
-                   note.isdeleted != (index.deleted == 1) {
+            for noteAttr in noteAttrList {
+                // データベースからキーが一致するノートを検索
+                var note: Note! = self.database.searchNote(noteAttr.key)
+                //サーバーの方が同期回数が多いときだけ更新
+                if note == nil || note.syncnum < noteAttr.syncnum {
                     // ノートの本体を取得
-                    self.simplenote.getNote(index.key) {
-                        (result, attr, content) in
+                    self.simplenote.getNote(noteAttr.key) {
+                        (result, noteAttrUpdated, content) in
                         if !result.success() {
                             // TODO: ノート本体の取得に失敗、ここでもエラー通知が必要か？
                             return
                         }
+                        // ノートがローカルに存在しないときは新規作成
                         if note == nil {
                             println(__FUNCTION__, "Creating new note in DB...")
-                            note = self.database.addNote(index.key)
+                            note = self.database.addNote(noteAttrUpdated.key)
                         }
                         // データベースのノート情報を更新
-                        self.updateNote(note, attr: attr, content: content)
+                        self.updateNote(note, attr: noteAttrUpdated, content: content)
                         self.database.saveContext()
                     }
                 }

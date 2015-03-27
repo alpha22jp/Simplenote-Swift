@@ -85,6 +85,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                 }
                 // データベースのノート情報を更新
                 self.updateNote(note, attr: noteAttr, content: content)
+                note.ismodified = false
                 self.database.saveContext()
             }
         }

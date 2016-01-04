@@ -31,7 +31,10 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
         // デフォルト状態の検索結果をセット
         fetchedResultsController = getDefaultFetchedResultsController()
-        fetchedResultsController.performFetch(nil)
+        do {
+            try fetchedResultsController.performFetch()
+        } catch _ {
+        }
 
         // リフレッシュコントロールを追加
         let refresh = UIRefreshControl()
@@ -45,7 +48,10 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
         // 設定の変更を反映するために必要
         fetchedResultsController = getDefaultFetchedResultsController()
-        fetchedResultsController.performFetch(nil)
+        do {
+            try fetchedResultsController.performFetch()
+        } catch _ {
+        }
         tableView.reloadData()
     }
 
@@ -73,10 +79,10 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
 
     // MARK: データベースに保存している全ノートの情報をサーバーと同期する
     func syncWithServer() {
-        println(__FUNCTION__, "Start syncing cached note data with server...")
+        print(__FUNCTION__, "Start syncing cached note data with server...")
         // ローカル側で追加・変更されたノートの同期
         for note in database.searchModifiedNote() {
-            println(__FUNCTION__, "Update note, key = \(note.key), version = \(note.version)")
+            print(__FUNCTION__, "Update note, key = \(note.key), version = \(note.version)")
             simplenote.updateNote(note.key, content: note.content, version: note.version, modifydate: note.modifydate) {
                 (result, noteAttr, content) in
                 if !result.success() {
@@ -92,7 +98,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         // 全ノートのインデックスを取得
         simplenote.getIndex { (result, noteAttrList) in
             if !result.success() {
-                println(__FUNCTION__, "result = \(result.rawValue)")
+                print(__FUNCTION__, "result = \(result.rawValue)")
                 self.refreshControl?.endRefreshing()
                 self.showAlert("Error", message: result.rawValue)
                 return
@@ -111,7 +117,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                         }
                         // ノートがローカルに存在しないときは新規作成
                         if note == nil {
-                            println(__FUNCTION__, "Creating new note in DB...")
+                            print(__FUNCTION__, "Creating new note in DB...")
                             note = self.database.addNote(noteAttrUpdated.key)
                         }
                         // データベースのノート情報を更新
@@ -158,7 +164,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         // Configure the cell...
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
-        let note = fetchedResultsController.objectAtIndexPath(indexPath) as Note
+        let note = fetchedResultsController.objectAtIndexPath(indexPath) as! Note
         cell.textLabel?.text = note.content
 
         let formatter = NSDateFormatter()
@@ -173,13 +179,13 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     // MARK: - Navigation
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
+        print(__FUNCTION__, "segue.identifier: \(segue.identifier)")
         if segue.identifier == "toNoteView" {
             // Navigate to NoteView (show (e.g. push))
-            let cell = sender as UITableViewCell
+            let cell = sender as! UITableViewCell
             let indexPath = tableView.indexPathForCell(cell)
             let note = fetchedResultsController.objectAtIndexPath(indexPath!) as Note
-            let controller = segue.destinationViewController as NoteViewController
+            let controller = segue.destinationViewController as! NoteViewController
             // 選択されているcellに対応するnoteをNoteViewに渡す
             controller.note = note
         } else if segue.identifier == "toSettingView" {
@@ -190,13 +196,13 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     }
 
     @IBAction func unwindBySegue(segue: UIStoryboardSegue) {
-        println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
+        print(__FUNCTION__, "segue.identifier: \(segue.identifier)")
         if segue.identifier == "settingToMain" {
             // Navigate back to MainView from SettingsView
         } else if segue.identifier == "noteEditToMain" {
             // Navigate back to MainView from NoteEditView
             // 遷移元のビューは以下の方法で参照可能
-            let controller = segue.sourceViewController as NoteEditViewController
+            let controller = segue.sourceViewController as! NoteEditViewController
         }
     }
 
@@ -230,14 +236,17 @@ class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdati
         if searchController.searchBar.text.isEmpty {
             fetchedResultsController = getDefaultFetchedResultsController()
         } else {
-            println(__FUNCTION__, "Search text = \(searchController.searchBar.text)")
+            print(__FUNCTION__, "Search text = \(searchController.searchBar.text)")
             let key = (settings.sort.get() == 0 ? "modifydate" : "createdate")
             let ascending = (settings.order.get() == 1)
             let sort = NSSortDescriptor(key: key, ascending: ascending)
             let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS[cd] %@", "isdeleted", "content", searchController.searchBar.text)
             fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
         }
-        fetchedResultsController.performFetch(nil)
+        do {
+            try fetchedResultsController.performFetch()
+        } catch _ {
+        }
         tableView.reloadData()
     }
 

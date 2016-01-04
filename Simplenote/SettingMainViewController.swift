@@ -48,15 +48,15 @@ class SettingMainViewController: UITableViewController {
     // MARK: - Navigation
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
+        print(__FUNCTION__, "segue.identifier: \(segue.identifier)")
         if segue.identifier == "sortByDetail" {
             // Navigate to SettingDetailView (show (e.g. push))
-            let controller = segue.destinationViewController as SettingDetailViewController
+            let controller = segue.destinationViewController as! SettingDetailViewController
             controller.setting = settings.sort
             controller.items = sortItems
         } else if segue.identifier == "orderDetail" {
             // Navigate to SettingDetailView (show (e.g. push))
-            let controller = segue.destinationViewController as SettingDetailViewController
+            let controller = segue.destinationViewController as! SettingDetailViewController
             controller.setting = settings.order
             controller.items = orderItems
         } else if segue.identifier == "setAccount" {

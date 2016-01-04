@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BA31D1DCE3D47DFC964AC13D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BC97A915E4D3091EF13174D /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		BA31D1DCE3D47DFC964AC13D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BC97A915E4D3091EF13174D /* Pods.framework */; };
 		C73983A71A552A2F00C1E215 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73983A61A552A2F00C1E215 /* MainViewController.swift */; };
 		C73983A91A5574DB00C1E215 /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73983A81A5574DB00C1E215 /* NoteViewController.swift */; };
 		C7663EBD1A5524F10030FAAF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7663EBC1A5524F10030FAAF /* AppDelegate.swift */; };
@@ -216,11 +216,14 @@
 		C7663EAF1A5524F10030FAAF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastSwiftMigration = 0720;
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = alpha22jp;
 				TargetAttributes = {
 					C7663EB61A5524F10030FAAF = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = FNFRTHML5U;
 					};
 					C7663ECE1A5524F20030FAAF = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -394,6 +397,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -458,10 +462,14 @@
 			baseConfigurationReference = F85E43A97E1DE68FDF253976 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Simplenote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alpha22jp.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -470,10 +478,14 @@
 			baseConfigurationReference = BF2A179E236DA26868420CD1 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Simplenote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alpha22jp.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -491,6 +503,7 @@
 				);
 				INFOPLIST_FILE = SimplenoteTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alpha22jp.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Simplenote.app/Simplenote";
 			};
@@ -506,6 +519,7 @@
 				);
 				INFOPLIST_FILE = SimplenoteTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alpha22jp.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Simplenote.app/Simplenote";
 			};

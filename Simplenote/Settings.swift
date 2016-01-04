@@ -20,7 +20,7 @@ class Setting<T> {
         userDefaults.registerDefaults([key: initialValue])
     }
     func set(value: AnyObject) { userDefaults.setObject(value, forKey: key) }
-    func get() -> T { return userDefaults.objectForKey(key) as T }
+    func get() -> T { return userDefaults.objectForKey(key) as! T }
 }
 
 // MARK: - 設定値を管理するクラス

@@ -66,10 +66,10 @@ class NoteViewController: UIViewController, UIWebViewDelegate {
     // MARK: - Navigation
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        println(__FUNCTION__, "segue.identifier: \(segue.identifier)")
+        print(__FUNCTION__, "segue.identifier: \(segue.identifier)")
         if segue.identifier == "toNoteEditView" {
             // Navigate to NoteEditView (present modally)
-            let navi = segue.destinationViewController as UINavigationController
+            let navi = segue.destinationViewController as! UINavigationController
             let controller = navi.topViewController as NoteEditViewController
             controller.note = note
         }

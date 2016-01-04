@@ -53,7 +53,10 @@ final class NoteDatabase {
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("Simplenote.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
-        if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
+        do {
+            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+        } catch var error1 as NSError {
+            error = error1
             coordinator = nil
             // Report any error we got.
             let dict = NSMutableDictionary()
@@ -65,6 +68,8 @@ final class NoteDatabase {
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog("Unresolved error \(error), \(error!.userInfo)")
             abort()
+        } catch {
+            fatalError()
         }
         
         return coordinator
@@ -86,11 +91,16 @@ final class NoteDatabase {
     func saveContext() {
         if let moc = self.managedObjectContext {
             var error: NSError? = nil
-            if moc.hasChanges && !moc.save(&error) {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                NSLog("Unresolved error \(error), \(error!.userInfo)")
-                abort()
+            if moc.hasChanges {
+                do {
+                    try moc.save()
+                } catch let error1 as NSError {
+                    error = error1
+                    // Replace this implementation with code to handle the error appropriately.
+                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                    NSLog("Unresolved error \(error), \(error!.userInfo)")
+                    abort()
+                }
             }
         }
     }
@@ -106,7 +116,7 @@ final class NoteDatabase {
 
     // MARK: 与えられたNSFetchRequestで検索して結果をNoteの配列で返す
     private func executeFetch(req: NSFetchRequest) -> [Note] {
-        let results = managedObjectContext?.executeFetchRequest(req, error: nil)
+        let results = try? managedObjectContext?.executeFetchRequest(req)
         let notes = results as? [Note]
         return (notes ?? [])
     }
@@ -123,7 +133,7 @@ final class NoteDatabase {
 
     // MARK: ノートを新規作成して作成したノートを返す
     func addNote(key: String) -> Note {
-        var note = NSEntityDescription.insertNewObjectForEntityForName("Note", inManagedObjectContext: managedObjectContext!) as Note
+        var note = NSEntityDescription.insertNewObjectForEntityForName("Note", inManagedObjectContext: managedObjectContext!) as! Note
         note.key = key
         note.syncnum = 0
         return note

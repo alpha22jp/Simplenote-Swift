@@ -49,7 +49,7 @@ final class SimplenoteServer {
 
     // MARK: サーバアクセス時に必要なアカウント情報をセットする
     func setAccountInfo(email: String, password: String){
-        println(__FUNCTION__, "email: \(email) password: \(password)")
+        print(__FUNCTION__, "email: \(email) password: \(password)")
         self.email = email
         self.password = password
         self.token = "" // アカウント情報が変更されたらトークンをリセット

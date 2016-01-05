@@ -86,7 +86,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             simplenote.updateNote(note.key, content: note.content, version: note.version, modifydate: note.modifydate) {
                 (result, noteAttr, content) in
                 if !result.success() {
-                    println(__FUNCTION__, "result = \(result.rawValue)")
+                    print(__FUNCTION__, "result = \(result.rawValue)")
                     return
                 }
                 // データベースのノート情報を更新
@@ -142,7 +142,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     }
 
     // MARK: コンテンツ変更時に呼ばれる
-    func controllerDidChangeContent(controller: NSFetchedResultsController!) {
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
         tableView.reloadData()
     }
 
@@ -184,7 +184,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
             // Navigate to NoteView (show (e.g. push))
             let cell = sender as! UITableViewCell
             let indexPath = tableView.indexPathForCell(cell)
-            let note = fetchedResultsController.objectAtIndexPath(indexPath!) as Note
+            let note = fetchedResultsController.objectAtIndexPath(indexPath!) as! Note
             let controller = segue.destinationViewController as! NoteViewController
             // 選択されているcellに対応するnoteをNoteViewに渡す
             controller.note = note
@@ -202,7 +202,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         } else if segue.identifier == "noteEditToMain" {
             // Navigate back to MainView from NoteEditView
             // 遷移元のビューは以下の方法で参照可能
-            let controller = segue.sourceViewController as! NoteEditViewController
+            _ = segue.sourceViewController as! NoteEditViewController
         }
     }
 
@@ -233,14 +233,14 @@ class MainViewControllerWithSearchBar: MainViewController, UISearchResultsUpdati
     // MARK: - UISearchResultsUpdating
 
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        if searchController.searchBar.text.isEmpty {
+        if searchController.searchBar.text!.isEmpty {
             fetchedResultsController = getDefaultFetchedResultsController()
         } else {
             print(__FUNCTION__, "Search text = \(searchController.searchBar.text)")
             let key = (settings.sort.get() == 0 ? "modifydate" : "createdate")
             let ascending = (settings.order.get() == 1)
             let sort = NSSortDescriptor(key: key, ascending: ascending)
-            let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS[cd] %@", "isdeleted", "content", searchController.searchBar.text)
+            let predicate = NSPredicate(format: "%K = FALSE && %K CONTAINS[cd] %@", "isdeleted", "content", searchController.searchBar.text!)
             fetchedResultsController = database.getFetchedResultsController(sort, predicate: predicate, delegate: self)
         }
         do {

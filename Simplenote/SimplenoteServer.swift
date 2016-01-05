@@ -87,25 +87,18 @@ final class SimplenoteServer {
         let str = "email=\(email)&password=\(password)"
         let encodedStr = str.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
         let data = encodedStr?.dataUsingEncoding(NSUTF8StringEncoding)
-        let base64data = data?.base64EncodedStringWithOptions(nil)
+        let base64data = data?.base64EncodedStringWithOptions([.Encoding64CharacterLineLength, .EncodingEndLineWithCarriageReturn])
         let url = serverUrl + "api/login"
         let params = [ base64data!: "" ]
         // サーバーにリクエストを送信してレスポンスを取得
         Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
-            (_, res, data, _) in
-            var statusCode = (res == nil ? 0 : res!.statusCode)
-            println(__FUNCTION__, "Status Code: \(statusCode)")
-            var result = self.statusCodeToResult(statusCode)
-            if result.success() {
-                println(__FUNCTION__, "Token: \(data)")
-                if data == nil || data!.isEmpty {
-                    result = .UnknownError
-                } else {
-                    result = .Success
-                    self.token = data!
-                }
+            response in
+            if response.result.isFailure {
+                completion?(.UnknownError, "")
+                return
             }
-            completion?(result, self.token)
+            self.token = (response.data?.accessibilityValue)!
+            completion?(.Success, self.token)
         }
     }
 
@@ -128,18 +121,14 @@ final class SimplenoteServer {
         var params = ["length": "100", "auth": token, "email": self.email]
         if !mark.isEmpty { params["mark"] = mark }
         Alamofire.request(.GET, url, parameters: params).responseJSON {
-            (_, res, resData, _) in
-            var statusCode = (res == nil ? 0 : res!.statusCode)
-            println(__FUNCTION__, "Status Code: \(statusCode)")
-            var result = self.statusCodeToResult(statusCode)
-            if resData == nil { result = .UnknownError }
-            if !result.success() {
-                completion?(result, nil)
+            response in
+            if response.result.isFailure {
+                completion?(Result.ServerConnectionError, nil)
                 return
             }
-            let json = JSON(resData!)
+            let json = JSON(response.data!)
             var newNoteAttrList: [NoteAttributes] = noteAttrList
-            json["data"].arrayValue.map { newNoteAttrList.append(self.makeNoteAttributes($0)) }
+            _ = json["data"].arrayValue.map { newNoteAttrList.append(self.makeNoteAttributes($0)) }
             let newMark = json["mark"].stringValue
             if newMark.isEmpty {
                 completion?(.Success, newNoteAttrList)
@@ -170,17 +159,12 @@ final class SimplenoteServer {
             let url = self.serverUrl + "api2/data/" + key
             let params = [ "auth": token, "email": self.email ]
             Alamofire.request(.GET, url, parameters: params).responseJSON {
-                (_, res, data, _) in
-                println(__FUNCTION__, "Status Code: \(res?.statusCode)")
-                var statusCode = (res == nil ? 0 : res!.statusCode)
-                var result = self.statusCodeToResult(statusCode)
-                if data == nil { result = .UnknownError }
-                if !result.success() {
-                    completion?(result, nil, nil)
+                response in
+                if response.result.isFailure {
+                    completion?(.ServerConnectionError, nil, nil)
                     return
                 }
-                let json = JSON(data!)
-                println(__FUNCTION__, "Note: \(json)")
+                let json = JSON(response.data!)
                 let attr = self.makeNoteAttributes(json)
                 let content = json["content"].stringValue
                 completion?(.Success, attr, content)
@@ -201,17 +185,12 @@ final class SimplenoteServer {
             let params = [ "content": content, "version": String(version),
                            "modifydate": NSString(format: "%.6f", modifydate) ]
             Alamofire.request(.POST, url, parameters: params, encoding: .JSON).responseJSON {
-                (req, res, data, _) in
-                var statusCode = (res == nil ? 0 : res!.statusCode)
-                println(__FUNCTION__, "Status Code: \(statusCode)")
-                var result = self.statusCodeToResult(statusCode)
-                if data == nil { result = .UnknownError }
-                if !result.success() {
-                    completion?(result, nil, nil)
+                response in
+                if response.result.isFailure {
+                    completion?(.ServerConnectionError, nil, nil)
                     return
                 }
-                let json = JSON(data!)
-                println(__FUNCTION__, "Note: \(json)")
+                let json = JSON(response.data!)
                 let attr = self.makeNoteAttributes(json)
                 // マージが発生したときだけ、レスポンスにcontentが含まれる
                 let contentUpdated = (json["content"].stringValue.isEmpty ?

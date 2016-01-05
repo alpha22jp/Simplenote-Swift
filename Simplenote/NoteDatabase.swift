@@ -63,9 +63,6 @@ final class NoteDatabase {
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
             dict[NSUnderlyingErrorKey] = error
-            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
-            // Replace this with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog("Unresolved error \(error), \(error!.userInfo)")
             abort()
         } catch {
@@ -133,7 +130,7 @@ final class NoteDatabase {
 
     // MARK: ノートを新規作成して作成したノートを返す
     func addNote(key: String) -> Note {
-        var note = NSEntityDescription.insertNewObjectForEntityForName("Note", inManagedObjectContext: managedObjectContext!) as! Note
+        let note = NSEntityDescription.insertNewObjectForEntityForName("Note", inManagedObjectContext: managedObjectContext!) as! Note
         note.key = key
         note.syncnum = 0
         return note

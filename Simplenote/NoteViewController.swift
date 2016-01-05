@@ -53,11 +53,11 @@ class NoteViewController: UIViewController, UIWebViewDelegate {
 
     // MARK: - UIWebViewDelegate
 
-    func webView(webView: UIWebView!, shouldStartLoadWithRequest request: NSURLRequest!,
+    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest,
                  navigationType: UIWebViewNavigationType) -> Bool {
         if navigationType == UIWebViewNavigationType.LinkClicked {
             // リンクのクリックはSafariで開く
-            UIApplication.sharedApplication().openURL(request.URL)
+            UIApplication.sharedApplication().openURL(request.URL!)
             return false
         }
         return true
@@ -70,7 +70,7 @@ class NoteViewController: UIViewController, UIWebViewDelegate {
         if segue.identifier == "toNoteEditView" {
             // Navigate to NoteEditView (present modally)
             let navi = segue.destinationViewController as! UINavigationController
-            let controller = navi.topViewController as NoteEditViewController
+            let controller = navi.topViewController as! NoteEditViewController
             controller.note = note
         }
     }

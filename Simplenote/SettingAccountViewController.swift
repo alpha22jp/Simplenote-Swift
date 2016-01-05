@@ -27,7 +27,7 @@ class SettingAccountViewController: UITableViewController {
 
     // MARK: Saveボタンがタップされたときに呼ばれる
     @IBAction func didSaveButtonTap(sender: AnyObject) {
-        if emailField.text.isEmpty || passwordField.text.isEmpty {
+        if emailField.text!.isEmpty || passwordField.text!.isEmpty {
             showAlert("Error", message: "E-mail or Password field is empty")
             return
         }
@@ -47,8 +47,8 @@ class SettingAccountViewController: UITableViewController {
         } else {
             // パスワードの変更だけのときはデータベースはクリアしない
             if passwordField.text != settings.password.get() {
-                settings.password.set(passwordField.text)
-                simplenote.setAccountInfo(emailField.text, password: passwordField.text)
+                settings.password.set(passwordField.text!)
+                simplenote.setAccountInfo(emailField.text!, password: passwordField.text!)
             }
             dismissViewControllerAnimated(true, completion: nil)
         }
@@ -69,9 +69,9 @@ class SettingAccountViewController: UITableViewController {
     // MARK: アカウント情報のリセットとデータベースのクリアを行う
     private func resetAccount() {
         database.deleteAllNotes()
-        settings.email.set(emailField.text)
-        settings.password.set(passwordField.text)
-        simplenote.setAccountInfo(emailField.text, password: passwordField.text)
+        settings.email.set(emailField.text!)
+        settings.password.set(passwordField.text!)
+        simplenote.setAccountInfo(emailField.text!, password: passwordField.text!)
     }
 
     // MARK: エラーを通知するアラート (OKボタンのみ) を表示する

@@ -123,10 +123,10 @@ final class SimplenoteServer {
         Alamofire.request(.GET, url, parameters: params).responseJSON {
             response in
             if response.result.isFailure {
-                completion?(Result.ServerConnectionError, nil)
+                completion?(.ServerConnectionError, nil)
                 return
             }
-            let json = JSON(response.data!)
+            let json = JSON(response.result.value!)
             var newNoteAttrList: [NoteAttributes] = noteAttrList
             _ = json["data"].arrayValue.map { newNoteAttrList.append(self.makeNoteAttributes($0)) }
             let newMark = json["mark"].stringValue
@@ -164,7 +164,7 @@ final class SimplenoteServer {
                     completion?(.ServerConnectionError, nil, nil)
                     return
                 }
-                let json = JSON(response.data!)
+                let json = JSON(response.result.value!)
                 let attr = self.makeNoteAttributes(json)
                 let content = json["content"].stringValue
                 completion?(.Success, attr, content)
@@ -190,7 +190,7 @@ final class SimplenoteServer {
                     completion?(.ServerConnectionError, nil, nil)
                     return
                 }
-                let json = JSON(response.data!)
+                let json = JSON(response.result.value!)
                 let attr = self.makeNoteAttributes(json)
                 // マージが発生したときだけ、レスポンスにcontentが含まれる
                 let contentUpdated = (json["content"].stringValue.isEmpty ?

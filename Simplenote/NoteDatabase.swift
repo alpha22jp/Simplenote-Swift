@@ -24,12 +24,8 @@ class Note: NSManagedObject {
 // MARK: - ノート情報のデータベースを管理するクラス
 final class NoteDatabase {
 
-    class var sharedInstance: NoteDatabase {
-        struct Static {
-            static let instance = NoteDatabase()
-        }
-        return Static.instance
-    }
+    static let instance = NoteDatabase()
+    class var sharedInstance: NoteDatabase { return instance }
     private init(){}
 
     // MARK: - Core Data stack (Migrated from AppDelegate.swift)

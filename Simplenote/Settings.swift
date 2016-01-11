@@ -30,11 +30,7 @@ class Settings {
     let sort = Setting<Int>(key: "sort", initialValue: 0)
     let order = Setting<Int>(key: "order", initialValue: 0)
 
-    class var sharedInstance: Settings {
-        struct Static {
-            static let instance = Settings()
-        }
-        return Static.instance
-    }
-    private init() {}
+    static let instance = Settings()
+    class var sharedInstance: Settings { return instance }
+    private init(){}
 }

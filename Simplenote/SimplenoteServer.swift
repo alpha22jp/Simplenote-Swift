@@ -19,13 +19,13 @@ final class SimplenoteServer {
 
     // MARK: ノートの属性情報
     struct NoteAttributes {
-        var key: String // キー (ノートの固有ID)
-        var syncnum: Int32 // 同期回数
-        var createdate: NSTimeInterval // 作成日時
-        var modifydate: NSTimeInterval // 最終変更日時
-        var version: Int32 // バージョン
-        var deleted: Int32 // 削除済みフラグ
-        var markdown: Bool // マークダウン表示モードフラグ
+        let key: String // キー (ノートの固有ID)
+        let syncnum: Int32 // 同期回数
+        let createdate: NSTimeInterval // 作成日時
+        let modifydate: NSTimeInterval // 最終変更日時
+        let version: Int32 // バージョン
+        let deleted: Int32 // 削除済みフラグ
+        let markdown: Bool // マークダウン表示モードフラグ
     }
 
     // MARK: サーバーの応答結果

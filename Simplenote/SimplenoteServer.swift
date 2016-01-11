@@ -39,12 +39,8 @@ final class SimplenoteServer {
         func success() -> Bool { return (self == Success) }
     }
 
-    class var sharedInstance: SimplenoteServer {
-        struct Static {
-            static let instance = SimplenoteServer()
-        }
-        return Static.instance
-    }
+    static let instance = SimplenoteServer()
+    class var sharedInstance: SimplenoteServer { return instance }
     private init(){}
 
     // MARK: サーバアクセス時に必要なアカウント情報をセットする
@@ -56,9 +52,12 @@ final class SimplenoteServer {
     }
 
     // MARK: HTTPステータスコードをResultに変換する
-    private func statusCodeToResult(statusCode: Int) -> Result {
+    private func responseToResult(response: NSHTTPURLResponse?) -> Result {
+        guard let res = response else {
+            return .ServerConnectionError
+        }
         // ステータスコードに応じてresultを設定
-        switch statusCode {
+        switch res.statusCode {
         case 200:
             return .Success
         case 400:
@@ -91,13 +90,13 @@ final class SimplenoteServer {
         let url = serverUrl + "api/login"
         let params = [ base64data!: "" ]
         // サーバーにリクエストを送信してレスポンスを取得
-        Alamofire.request(.POST, url, parameters: params, encoding: .URL).responseString {
-            response in
-            if response.result.isFailure {
-                completion?(.UnknownError, "")
+        Alamofire.request(.POST, url, parameters: params, encoding: .URL)
+          .validate(statusCode: 200...200).responseString { response in
+            guard case let .Success(value) = response.result else {
+                completion?(self.responseToResult(response.response), "")
                 return
             }
-            self.token = (response.data?.accessibilityValue)!
+            self.token = value
             completion?(.Success, self.token)
         }
     }
@@ -120,15 +119,17 @@ final class SimplenoteServer {
         let url = self.serverUrl + "api2/index"
         var params = ["length": "100", "auth": token, "email": self.email]
         if !mark.isEmpty { params["mark"] = mark }
-        Alamofire.request(.GET, url, parameters: params).responseJSON {
-            response in
-            if response.result.isFailure {
-                completion?(.ServerConnectionError, nil)
+        Alamofire.request(.GET, url, parameters: params)
+          .validate(statusCode: 200...200).responseJSON { response in
+            guard case let .Success(value) = response.result else {
+                completion?(self.responseToResult(response.response), nil)
                 return
             }
-            let json = JSON(response.result.value!)
+            let json = JSON(value)
             var newNoteAttrList: [NoteAttributes] = noteAttrList
-            _ = json["data"].arrayValue.map { newNoteAttrList.append(self.makeNoteAttributes($0)) }
+            _ = json["data"].arrayValue.map {
+                newNoteAttrList.append(self.makeNoteAttributes($0))
+            }
             let newMark = json["mark"].stringValue
             if newMark.isEmpty {
                 completion?(.Success, newNoteAttrList)
@@ -158,13 +159,13 @@ final class SimplenoteServer {
             }
             let url = self.serverUrl + "api2/data/" + key
             let params = [ "auth": token, "email": self.email ]
-            Alamofire.request(.GET, url, parameters: params).responseJSON {
-                response in
-                if response.result.isFailure {
-                    completion?(.ServerConnectionError, nil, nil)
+            Alamofire.request(.GET, url, parameters: params)
+              .validate(statusCode: 200...200).responseJSON { response in
+                guard case let .Success(value) = response.result else {
+                    completion?(self.responseToResult(response.response), nil, nil)
                     return
                 }
-                let json = JSON(response.result.value!)
+                let json = JSON(value)
                 let attr = self.makeNoteAttributes(json)
                 let content = json["content"].stringValue
                 completion?(.Success, attr, content)
@@ -184,13 +185,13 @@ final class SimplenoteServer {
             (key.isEmpty ? "" : "/\(key)") + "?auth=\(token)&emil=\(self.email)"
             let params = [ "content": content, "version": String(version),
                            "modifydate": NSString(format: "%.6f", modifydate) ]
-            Alamofire.request(.POST, url, parameters: params, encoding: .JSON).responseJSON {
-                response in
-                if response.result.isFailure {
-                    completion?(.ServerConnectionError, nil, nil)
+            Alamofire.request(.POST, url, parameters: params, encoding: .JSON)
+              .validate(statusCode: 200...200).responseJSON { response in
+                guard case let .Success(value) = response.result else {
+                    completion?(self.responseToResult(response.response), nil, nil)
                     return
                 }
-                let json = JSON(response.result.value!)
+                let json = JSON(value)
                 let attr = self.makeNoteAttributes(json)
                 // マージが発生したときだけ、レスポンスにcontentが含まれる
                 let contentUpdated = (json["content"].stringValue.isEmpty ?

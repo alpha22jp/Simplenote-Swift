@@ -15,12 +15,12 @@
 
 ## Environment
 
-* XCode 6.2
+* XCode 7.2
 * iOS 8.0 or higher
 
 ## How to build
 
-Before building the project, install and setup CocoaPods (0.36.0).
+Before building the project, install and setup CocoaPods.
 ```Shell
 sudo gem install cocoapods
 pod setup
@@ -39,6 +39,11 @@ Open `Simplenote-Swift/Simplenote.xcworkspace` by XCode and build it!
 * Support Simplenote tags
 * Store password securely by KeyChain
 * Support multi languages
+
+## History
+
+* 2016/1 Update to support Swift 2.0 (with xcode7.2)
+* 2015/1 Initial Release
 
 ## Tanks
 

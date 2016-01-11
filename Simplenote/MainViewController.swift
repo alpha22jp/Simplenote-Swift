@@ -97,10 +97,14 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
         }
         // 全ノートのインデックスを取得
         simplenote.getIndex { (result, noteAttrList) in
-            if !result.success() {
-                print(__FUNCTION__, "result = \(result.rawValue)")
+            defer {
                 self.refreshControl?.endRefreshing()
-                self.showAlert("Error", message: result.rawValue)
+                if !result.success() {
+                    self.showAlert("Error", message: result.rawValue)
+                }
+            }
+            guard result.success() else {
+                print(__FUNCTION__, "result = \(result.rawValue)")
                 return
             }
             for noteAttr in noteAttrList {
@@ -117,7 +121,6 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                         }
                         // ノートがローカルに存在しないときは新規作成
                         if note == nil {
-                            print(__FUNCTION__, "Creating new note in DB...")
                             note = self.database.addNote(noteAttrUpdated.key)
                         }
                         // データベースのノート情報を更新
@@ -126,7 +129,6 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                     }
                 }
             }
-            self.refreshControl?.endRefreshing()
         }
     }
 

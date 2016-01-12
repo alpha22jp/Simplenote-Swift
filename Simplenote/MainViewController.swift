@@ -165,8 +165,8 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     // MARK: 各セルの内容を設定する
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         // Configure the cell...
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
-        let note = fetchedResultsController.objectAtIndexPath(indexPath) as! Note
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+        let note = fetchedResultsController.objectAtIndexPath(indexPath)
         cell.textLabel?.text = note.content
 
         let formatter = NSDateFormatter()

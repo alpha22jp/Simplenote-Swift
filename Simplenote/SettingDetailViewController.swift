@@ -55,7 +55,7 @@ class SettingDetailViewController: UITableViewController {
 
     // MARK: 各セルの内容を設定する
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
 
         // Configure the cell...
         cell.textLabel?.text = items[indexPath.row]

@@ -127,7 +127,7 @@ final class SimplenoteServer {
             }
             let json = JSON(value)
             var newNoteAttrList: [NoteAttributes] = noteAttrList
-            _ = json["data"].arrayValue.map {
+            json["data"].arrayValue.forEach {
                 newNoteAttrList.append(self.makeNoteAttributes($0))
             }
             let newMark = json["mark"].stringValue

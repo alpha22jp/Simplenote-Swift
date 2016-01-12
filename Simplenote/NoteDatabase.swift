@@ -164,9 +164,7 @@ final class NoteDatabase {
     // MARK: すべてのノートを削除する
     func deleteAllNotes() {
         let notes = executeFetch(getFetchRequest())
-        for note in notes {
-            managedObjectContext?.deleteObject(note)
-        }
+        notes.forEach { managedObjectContext?.deleteObject($0) }
         saveContext()
     }
 

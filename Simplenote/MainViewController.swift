@@ -81,7 +81,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
     func syncWithServer() {
         print(__FUNCTION__, "Start syncing cached note data with server...")
         // ローカル側で追加・変更されたノートの同期
-        for note in database.searchModifiedNote() {
+        database.searchModifiedNote().forEach { note in
             print(__FUNCTION__, "Update note, key = \(note.key), version = \(note.version)")
             simplenote.updateNote(note.key, content: note.content, version: note.version, modifydate: note.modifydate) {
                 (result, noteAttr, content) in
@@ -107,7 +107,7 @@ class MainViewController: UITableViewController, NSFetchedResultsControllerDeleg
                 print(__FUNCTION__, "result = \(result.rawValue)")
                 return
             }
-            for noteAttr in noteAttrList {
+            noteAttrList.forEach { noteAttr in
                 // データベースからキーが一致するノートを検索
                 var note: Note! = self.database.searchNote(noteAttr.key)
                 //サーバーの方が同期回数が多いときだけ更新
